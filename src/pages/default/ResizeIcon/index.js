@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Row, Col, Upload, message, Input, Button, Alert } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Alert, Radio } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
@@ -31,6 +31,7 @@ function ResizeIcon() {
     const [alert, setAlert] = useState(false);
     const [alertText, setAlertText] = useState('');
     const [resizeImg, setResizeImg] = useState(false);
+    const [valueVersion, setValueVersion] = useState(1);
 
     const uploadButton = (
         <div>
@@ -60,7 +61,6 @@ function ResizeIcon() {
             setAlertText('請上傳圖片');
             setAlert(true);
         } else if (orig_src.width < imgSize[0] || orig_src.height < imgSize[0]) {
-            console.log('orig_src.width', orig_src.width);
             setAlertText(`圖片尺寸錯誤，請上傳${imgSize[0]}x${imgSize[0]}以上的圖片`);
             setAlert(true);
             setImageUrl('');
@@ -84,6 +84,10 @@ function ResizeIcon() {
         setResizeImg(false);
     }
 
+    function handleChangeVersion(e) {
+        setValueVersion(e.target.value);
+    }
+
     function handleSave() {
         const zip = new JSZip();
         let src = '';
@@ -97,7 +101,11 @@ function ResizeIcon() {
             zip.file(name, src, { base64: true });
         }
         zip.generateAsync({ type: 'blob' }).then(function (content) {
-            saveAs(content, `${webId}站點APP ICON`);
+            if (valueVersion === 1) {
+                saveAs(content, `${webId}站點 一般版APP ICON`);
+            } else if (valueVersion === 2) {
+                saveAs(content, `${webId}站點 娛樂版APP ICON`);
+            }
         });
     }
 
@@ -147,6 +155,13 @@ function ResizeIcon() {
                                 <p>站點ID</p>
                                 <Input size="small" type="number" value={webId} onChange={handleChangeID} />
                             </InputRoot>
+                            <InputRoot>
+                                <p>版本</p>
+                                <Radio.Group value={valueVersion} onChange={handleChangeVersion}>
+                                    <Radio value={1}>一般版</Radio>
+                                    <Radio value={2}>娛樂版</Radio>
+                                </Radio.Group>
+                            </InputRoot>
                         </Col>
                         <Col span={4} style={{ display: 'flex', flexDirection: 'column' }}>
                             <TitleRoot size={20} borderBottom>
@@ -186,7 +201,8 @@ function ResizeIcon() {
                                     id={index}
                                     size={row}
                                     src={resizeImageUrl(row)}
-                                    name={row !== 128 ? `app_icon_${row}x${row}.png` : `app_icon_${webId}.png`}
+                                    version={valueVersion}
+                                    webId={webId}
                                 />
                             </Col>
                         ))}
@@ -225,6 +241,7 @@ const TitleRoot = styled(Title)`
 const InputRoot = styled.div`
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     p {
         min-width: 80px;
         margin-right: 10px;

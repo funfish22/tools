@@ -2,7 +2,23 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 function IconCard(props) {
-    const { size, src, name, id } = props;
+    const { size, src, id, webId, version } = props;
+
+    function reName() {
+        if (size !== 128) {
+            if (version === 1) {
+                return `app_icon_${size}x${size}.png`;
+            } else if (version === 2) {
+                return `app_icon_effects_${size}x${size}.png`;
+            }
+        } else {
+            if (version === 1) {
+                return `app_icon_${webId}.png`;
+            } else if (version === 2) {
+                return `app_icon_effects_${webId}.png`;
+            }
+        }
+    }
 
     return (
         <IconCardRoot>
@@ -12,7 +28,7 @@ function IconCard(props) {
             <div className="img_img">
                 <img src={src} id={'resizeImg' + (id + 1)} />
             </div>
-            <p id={'iconName' + (id + 1)}>{name}</p>
+            <p id={'iconName' + (id + 1)}>{reName()}</p>
         </IconCardRoot>
     );
 }
