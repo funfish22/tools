@@ -13,7 +13,7 @@ import Footer from '@component/organisms/Footer';
 
 function App() {
     return (
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <HashRouter>
             <Flex>
                 <Header title="首頁" />
                 <Layout>
@@ -23,7 +23,7 @@ function App() {
                     <Footer />
                 </LayoutFooter>
             </Flex>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 
