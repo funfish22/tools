@@ -13,7 +13,7 @@ import Footer from '@component/organisms/Footer';
 
 function App() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Flex>
                 <Header title="首頁" />
                 <Layout>
