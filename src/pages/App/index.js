@@ -13,7 +13,7 @@ import Footer from '@component/organisms/Footer';
 
 function App() {
     return (
-        <HashRouter>
+        <BrowserRouter>
             <Flex>
                 <Header title="首頁" />
                 <Layout>
@@ -23,7 +23,7 @@ function App() {
                     <Footer />
                 </LayoutFooter>
             </Flex>
-        </HashRouter>
+        </BrowserRouter>
     );
 }
 
