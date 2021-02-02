@@ -16,6 +16,14 @@ export const routes = [
         exact: true,
     },
     {
+        name: 'QR code 圖片調整工具',
+        path: '/qrCode',
+        component: React.lazy(() =>
+            import(/*webpackChunkName:"QRCode"*/ /*webpackMode:"lazy"*/ '@page/default/QRCode')
+        ),
+        exact: true,
+    },
+    {
         name: 'Page Not Found',
         path: '*',
         component: React.lazy(() =>
