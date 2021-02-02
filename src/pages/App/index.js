@@ -1,29 +1,34 @@
+import React, { useState } from 'react';
 import { HashRouter, BrowserRouter } from 'react-router-dom';
+import Router from './Router';
+
+import { MyContext } from '@reducers';
 
 import { Layout } from 'antd';
-
-import styled from 'styled-components';
-
 import 'antd/dist/antd.css';
 
-import Router from './Router';
+import styled from 'styled-components';
 
 import Header from '@component/organisms/Header';
 import Footer from '@component/organisms/Footer';
 
 function App() {
+    const [h1Title, setH1Title] = useState();
+
     return (
-        <HashRouter>
-            <Flex>
-                <Header title="首頁" />
-                <Layout>
-                    <Router />
-                </Layout>
-                <LayoutFooter>
-                    <Footer />
-                </LayoutFooter>
-            </Flex>
-        </HashRouter>
+        <MyContext.Provider value={{ h1Title, setH1Title }}>
+            <HashRouter>
+                <Flex>
+                    <Header />
+                    <Layout>
+                        <Router />
+                    </Layout>
+                    <LayoutFooter>
+                        <Footer />
+                    </LayoutFooter>
+                </Flex>
+            </HashRouter>
+        </MyContext.Provider>
     );
 }
 

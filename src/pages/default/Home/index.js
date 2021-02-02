@@ -1,8 +1,17 @@
+import React, { useEffect, useContext } from 'react';
+import { MyContext } from '@reducers';
+
 import Card from '@component/molecules/Card';
 
 import styled from 'styled-components';
 
 function Home() {
+    const { setH1Title } = useContext(MyContext);
+
+    useEffect(() => {
+        setH1Title('首頁');
+    });
+
     return (
         <Container>
             <Card />

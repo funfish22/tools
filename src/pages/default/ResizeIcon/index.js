@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+import { MyContext } from '@reducers';
+
 import { Form, Row, Col, Upload, message, Input, Button, Alert, Radio } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+
 import styled from 'styled-components';
 
 import JSZip from 'jszip';
@@ -32,6 +36,8 @@ function ResizeIcon() {
     const [alertText, setAlertText] = useState('');
     const [resizeImg, setResizeImg] = useState(false);
     const [valueVersion, setValueVersion] = useState(1);
+
+    const { setH1Title } = useContext(MyContext);
 
     const uploadButton = (
         <div>
@@ -123,6 +129,10 @@ function ResizeIcon() {
 
         return dataURL;
     }
+
+    useEffect(() => {
+        setH1Title('APP ICON 圖片尺寸調整工具');
+    });
 
     return (
         <ResizeIconRoot>

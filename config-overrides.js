@@ -1,9 +1,5 @@
 const path = require('path');
-const {
-    override,
-    addWebpackAlias,
-    addWebpackModuleRule,
-} = require('customize-cra');
+const { override, addWebpackAlias, addWebpackModuleRule } = require('customize-cra');
 
 const addChunkName = () => (config) => {
     config.output = {
