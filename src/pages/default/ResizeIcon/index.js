@@ -108,7 +108,7 @@ function ResizeIcon() {
         }
         zip.generateAsync({ type: 'blob' }).then(function (content) {
             if (valueVersion === 1) {
-                saveAs(content, `${webId}站點 一般版APP ICON`);
+                saveAs(content, `${webId}站點 標準版APP ICON`);
             } else if (valueVersion === 2) {
                 saveAs(content, `${webId}站點 娛樂版APP ICON`);
             }
@@ -168,7 +168,7 @@ function ResizeIcon() {
                             <InputRoot>
                                 <p>版本</p>
                                 <Radio.Group value={valueVersion} onChange={handleChangeVersion}>
-                                    <Radio value={1}>一般版</Radio>
+                                    <Radio value={1}>標準版</Radio>
                                     <Radio value={2}>娛樂版</Radio>
                                 </Radio.Group>
                             </InputRoot>
