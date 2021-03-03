@@ -194,6 +194,16 @@ function ResizeIcon() {
                                 size="large"
                                 block
                                 style={{ marginTop: 'auto' }}
+                                href="https://tinypng.com/"
+                                target="_blank"
+                            >
+                                TinyPng網站
+                            </Button>
+                            <Button
+                                type="primary"
+                                size="large"
+                                block
+                                style={{ marginTop: '10px' }}
                                 onClick={handleSave}
                             >
                                 打包下載
