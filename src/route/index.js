@@ -16,7 +16,7 @@ export const routes = [
         exact: true,
     },
     {
-        name: 'QR code 圖片調整工具',
+        name: 'QR code 自動爬蟲工具',
         path: '/qrCode',
         component: React.lazy(() =>
             import(/*webpackChunkName:"QRCode"*/ /*webpackMode:"lazy"*/ '@page/default/QRCode')

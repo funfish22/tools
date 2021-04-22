@@ -23,7 +23,7 @@ module.exports = override(
     //     ],
     // }),
     addWebpackAlias({
-        '@apis': path.resolve(__dirname, './src/apis'),
+        '@apis': path.resolve(__dirname, './src/services/api'),
         '@actions': path.resolve(__dirname, './src/store/actions'),
         '@reducers': path.resolve(__dirname, './src/store/reducers'),
         '@assets': path.resolve(__dirname, './src/assets'),

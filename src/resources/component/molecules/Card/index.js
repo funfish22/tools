@@ -11,7 +11,7 @@ const CardArray = [
         link: '/resizeIcon',
     },
     {
-        title: 'QR CODE 圖片調整工具',
+        title: 'QR CODE 自動爬蟲工具',
         bgColor: '#05baff',
         color: '#000',
         link: '/qrCode',

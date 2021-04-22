@@ -18,6 +18,9 @@ function IconCard(props) {
                 return `app_icon_effects_${webId}.png`;
             }
         }
+        if (size === 150) {
+            return `${webId}_qrcode.png`;
+        }
     }
 
     return (
