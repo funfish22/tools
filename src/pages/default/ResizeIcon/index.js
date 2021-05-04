@@ -15,20 +15,6 @@ import IconCard from '@component/molecules/IconCard';
 
 const imgSize = [192, 180, 144, 128, 120, 96];
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/png';
-    if (!isJpgOrPng) {
-        message.error('請上傳PNG檔!');
-    }
-    return isJpgOrPng;
-}
-
 function ResizeIcon() {
     const [imageUrl, setImageUrl] = useState('');
     const [webId, setWebId] = useState('');
@@ -46,6 +32,35 @@ function ResizeIcon() {
         </div>
     );
 
+    function getBase64(img, callback) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
+
+        reader.onload = function () {
+            const loadImgSize = new Image();
+            loadImgSize.src = reader.result;
+            if (loadImgSize.naturalWidth < imgSize[0] || loadImgSize.naturalHeight < imgSize[0]) {
+                setAlertText(`圖片尺寸錯誤，請上傳${imgSize[0]}x${imgSize[0]}的圖片`);
+                setAlert(true);
+                setImageUrl('');
+            }
+        };
+
+        setTimeout(() => {
+            setAlert(false);
+            setAlertText('');
+        }, 2000);
+    }
+
+    function beforeUpload(file) {
+        const isJpgOrPng = file.type === 'image/png';
+        if (!isJpgOrPng) {
+            message.error('請上傳PNG檔!');
+        }
+        return isJpgOrPng;
+    }
+
     function handleChange(info) {
         if (info.file.type === 'image/png') {
             getBase64(info.file.originFileObj, (imageUrl) => {
@@ -60,6 +75,7 @@ function ResizeIcon() {
 
     function handleRenderImage() {
         const orig_src = document.querySelector('.ant-upload-select-picture-card img');
+        console.log(orig_src);
         if (!webId) {
             setAlertText('請輸入站點ID');
             setAlert(true);
@@ -67,7 +83,8 @@ function ResizeIcon() {
             setAlertText('請上傳圖片');
             setAlert(true);
         } else if (orig_src.width < imgSize[0] || orig_src.height < imgSize[0]) {
-            setAlertText(`圖片尺寸錯誤，請上傳${imgSize[0]}x${imgSize[0]}以上的圖片`);
+            console.log('123');
+            setAlertText(`圖片尺寸錯誤，請上傳${imgSize[0]}x${imgSize[0]}的圖片`);
             setAlert(true);
             setImageUrl('');
         } else {

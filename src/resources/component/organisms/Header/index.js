@@ -16,9 +16,9 @@ function Header(props) {
 
     return (
         <Header>
-            <ButtonRoot type="ghost" size="large">
+            {/* <ButtonRoot type="ghost" size="large">
                 <MenuOutlined style={{ color: 'white' }} />
-            </ButtonRoot>
+            </ButtonRoot> */}
             <Title>{h1Title}</Title>
             <SideMenu />
         </Header>
