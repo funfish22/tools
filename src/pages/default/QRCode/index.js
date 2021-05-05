@@ -111,7 +111,17 @@ function QRcode() {
                                 <Input size="small" value={webUrl} onChange={handleWebUrl} />
                             </InputRoot>
                         </Col>
-                        <Col span={10} />
+                        <Col span={10}>
+                            <TitleRoot size={20} borderBottom>
+                                注意事項
+                            </TitleRoot>
+                            <p>執行此爬蟲工具，請先喚醒爬蟲API，連結如下</p>
+                            <WackUp href="https://still-hamlet-64914.herokuapp.com" target="_blank" rel="noreferrer">
+                                喚醒網址
+                            </WackUp>
+                            <p>當喚醒之後，網頁會出現如下圖的資訊，代表已喚醒成功，就可以操控此工具了</p>
+                            <img src="https://i.imgur.com/8v4kY5O.png" alt="喚醒" />
+                        </Col>
                         <Col span={4} style={{ display: 'flex', flexDirection: 'column' }}>
                             <TitleRoot size={20} borderBottom>
                                 功能
@@ -208,4 +218,10 @@ const QRcodeBody = styled.section`
     max-width: 1000px;
     margin: 0 auto;
     padding: 30px 0;
+`;
+
+const WackUp = styled.a`
+    color: #000;
+    display: inline-block;
+    margin-bottom: 1em;
 `;
