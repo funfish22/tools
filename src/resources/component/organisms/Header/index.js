@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { Layout, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
@@ -13,14 +13,23 @@ function Header(props) {
     const { Header } = Layout;
 
     const { h1Title } = useContext(MyContext);
+    const [menuSwitch, setMenuSwitch] = useState(false);
+
+    const handleMenuSwitch = () => {
+        setMenuSwitch(!menuSwitch);
+    };
+
+    const handleCloseMenu = () => {
+        setMenuSwitch(false);
+    };
 
     return (
         <Header>
-            {/* <ButtonRoot type="ghost" size="large">
+            <ButtonRoot type="ghost" size="large" onClick={handleMenuSwitch}>
                 <MenuOutlined style={{ color: 'white' }} />
-            </ButtonRoot> */}
+            </ButtonRoot>
             <Title>{h1Title}</Title>
-            <SideMenu />
+            <SideMenu menuSwitch={menuSwitch} handleCloseMenu={handleCloseMenu} />
         </Header>
     );
 }
