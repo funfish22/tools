@@ -1,23 +1,9 @@
 import React from 'react';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
+import { routes } from '@route';
 
 import styled from 'styled-components';
-
-const LinkArray = [
-    {
-        title: '首頁',
-        link: '/',
-    },
-    {
-        title: 'APP ICON 圖片尺寸調整工具',
-        link: '/resizeIcon',
-    },
-    {
-        title: 'QR CODE 自動爬蟲工具',
-        link: '/qrCode',
-    },
-];
 
 function SideMenu(props) {
     const { menuSwitch, handleCloseMenu } = props;
@@ -25,13 +11,15 @@ function SideMenu(props) {
     return (
         <SideMenuRoot className={menuSwitch ? 'SideMenuActive' : ''}>
             <Menu selectable={false} theme="dark">
-                {LinkArray.map((row, index) => (
-                    <Menu.Item key={index}>
-                        <Link to={row.link} onClick={handleCloseMenu}>
-                            {row.title}
-                        </Link>
-                    </Menu.Item>
-                ))}
+                {routes.map((row, index) => {
+                    return row.path !== '*' ? (
+                        <Menu.Item key={index}>
+                            <Link to={row.path} onClick={handleCloseMenu}>
+                                {row.name}
+                            </Link>
+                        </Menu.Item>
+                    ) : null;
+                })}
             </Menu>
         </SideMenuRoot>
     );
