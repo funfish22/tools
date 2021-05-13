@@ -8,6 +8,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 import Title from '@component/atoms/Title';
+import IconCard from '@component/molecules/IconCard';
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -25,6 +26,10 @@ function BatchImg() {
     const [previewTitle, setPreviewTitle] = useState('');
     const [customizeSize, setCustomizeSize] = useState(2);
     const [customizeName, setCustomizeName] = useState(2);
+    const [runSwitch, setRunSwitch] = useState(false);
+    const [qrCodeSize, setQrCodeSize] = useState('');
+
+    const multiple = [2, 3, 4, 4];
 
     const { setH1Title } = useContext(MyContext);
 
@@ -39,9 +44,19 @@ function BatchImg() {
         setH1Title('遊戲圖片批次產圖工具');
     });
 
-    function handleChange({ fileList }) {
-        console.log('info', fileList);
-        setFileList(fileList);
+    async function handleChange({ fileList }) {
+        const newFileList = await Promise.all(
+            fileList.map(async (row) => {
+                row.preview = await getBase64(row.originFileObj);
+                const image = new Image();
+                image.onload = () => {
+                    row.qrCodeSize = [image.width, image.height];
+                };
+                image.src = row.preview;
+                return row;
+            })
+        );
+        setFileList(newFileList);
     }
 
     function beforeUpload(file) {
@@ -57,11 +72,14 @@ function BatchImg() {
     }
 
     async function handlePreview(file) {
-        console.log('file', file);
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
+            const image = new Image();
+            image.onload = () => {
+                file.qrCodeSize = [image.width, image.height];
+            };
+            image.src = file.preview;
         }
-
         setpreviewImage(file.url || file.preview);
         setPreviewVisible(true);
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
@@ -71,6 +89,32 @@ function BatchImg() {
         const value = e.target.value;
         if (block === 'name') setCustomizeName(value);
         if (block === 'size') setCustomizeSize(value);
+    }
+
+    async function handleRenderImage() {
+        setRunSwitch(true);
+    }
+
+    function resizeImageUrl(target, size) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const resizeImg = new Image();
+
+        const width = (target.qrCodeSize[0] / 4) * size;
+        const height = (target.qrCodeSize[1] / 4) * size;
+
+        resizeImg.src = target.preview;
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.drawImage(resizeImg, 0, 0, width, height);
+        const dataURL = canvas.toDataURL('image/png');
+
+        return dataURL;
+    }
+
+    function handleQrCodeSize(e) {
+        setQrCodeSize(e.target.value);
     }
 
     return (
@@ -131,9 +175,11 @@ function BatchImg() {
                                     </Radio.Group>
                                     {customizeSize === 1 && (
                                         <Input.TextArea
-                                            rows={2}
-                                            placeholder="多尺寸，請以 , 做區隔"
+                                            rows={3}
+                                            placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔"
                                             style={{ resize: 'none', marginTop: '10px' }}
+                                            value={qrCodeSize}
+                                            onChange={handleQrCodeSize}
                                         />
                                     )}
                                 </CustomizeRoot>
@@ -143,7 +189,7 @@ function BatchImg() {
                             <TitleRoot size={20} borderBottom>
                                 功能
                             </TitleRoot>
-                            <Button type="primary" size="large" block>
+                            <Button type="primary" size="large" block onClick={handleRenderImage}>
                                 執行圖片縮放
                             </Button>
                             <Button type="danger" size="large" block style={{ marginTop: '10px' }}>
@@ -166,7 +212,27 @@ function BatchImg() {
                     </Row>
                 </Form>
             </BatchImgHeader>
-            <BatchImgBody></BatchImgBody>
+            <BatchImgBody>
+                <Row gutter={[16, 16]}>
+                    {runSwitch &&
+                        fileList.map((row) => {
+                            return (
+                                multiple &&
+                                multiple.map((row2, index2) => {
+                                    return (
+                                        <Col span={6}>
+                                            <IconCard
+                                                id={`${row.originFileObj.name}${index2}`}
+                                                size={(row.qrCodeSize[0] / 4) * row2}
+                                                src={resizeImageUrl(row, row2)}
+                                            />
+                                        </Col>
+                                    );
+                                })
+                            );
+                        })}
+                </Row>
+            </BatchImgBody>
         </BatchImgRoot>
     );
 }
