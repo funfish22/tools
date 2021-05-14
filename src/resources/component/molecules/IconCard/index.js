@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 function IconCard(props) {
-    const { size, src, id, webId, version } = props;
+    const { size, src, id, webId, version, BatchImg, name, multiple } = props;
 
     function reName() {
         if (size !== 128) {
@@ -20,6 +20,9 @@ function IconCard(props) {
         }
         if (size === 150) {
             return `${webId}_qrcode.png`;
+        }
+        if (BatchImg) {
+            return `${name} ${multiple}倍`;
         }
     }
 

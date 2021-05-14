@@ -121,6 +121,7 @@ function ResizeIcon() {
                 .getAttribute('src')
                 .replace('data:image/png;base64,', '');
             name = document.getElementById(`iconName${i + 1}`).textContent;
+            console.log('src', src);
             zip.file(name, src, { base64: true });
         }
         zip.generateAsync({ type: 'blob' }).then(function (content) {

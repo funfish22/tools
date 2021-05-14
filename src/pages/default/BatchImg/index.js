@@ -2,10 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { MyContext } from '@reducers';
 
-import { Form, Row, Col, Upload, message, Modal, Input, Button, Radio } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Radio } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
+
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 import Title from '@component/atoms/Title';
 import IconCard from '@component/molecules/IconCard';
@@ -21,15 +24,13 @@ function getBase64(file) {
 
 function BatchImg() {
     const [fileList, setFileList] = useState([]);
-    const [previewVisible, setPreviewVisible] = useState(false);
-    const [previewImage, setpreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
     const [customizeSize, setCustomizeSize] = useState(2);
     const [customizeName, setCustomizeName] = useState(2);
     const [runSwitch, setRunSwitch] = useState(false);
     const [qrCodeSize, setQrCodeSize] = useState('');
+    const [zipName, setZipName] = useState('');
 
-    const multiple = [2, 3, 4, 4];
+    const multiple = [2, 3, 3, 4];
 
     const { setH1Title } = useContext(MyContext);
 
@@ -44,45 +45,41 @@ function BatchImg() {
         setH1Title('遊戲圖片批次產圖工具');
     });
 
-    async function handleChange({ fileList }) {
-        const newFileList = await Promise.all(
-            fileList.map(async (row) => {
-                row.preview = await getBase64(row.originFileObj);
-                const image = new Image();
-                image.onload = () => {
-                    row.qrCodeSize = [image.width, image.height];
-                };
-                image.src = row.preview;
-                return row;
-            })
-        );
-        setFileList(newFileList);
-    }
+    async function beforeUpload(file) {
+        const fileObject = {};
+        const base64Img = await getBase64(file);
+        const image = new Image();
+        image.onload = () => {
+            fileObject.qrCodeSize = [image.width, image.height];
+            fileObject.resizeBase64Img = [];
+            for (let i = 0; i < multiple.length; i++) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const resizeImg = new Image();
 
-    function beforeUpload(file) {
+                const width = (fileObject.qrCodeSize[0] / 4) * multiple[i];
+                const height = (fileObject.qrCodeSize[1] / 4) * multiple[i];
+
+                resizeImg.src = base64Img;
+                canvas.width = width;
+                canvas.height = height;
+
+                ctx.drawImage(resizeImg, 0, 0, width, height);
+                const dataURL = canvas.toDataURL('image/png');
+                fileObject.resizeBase64Img[i] = dataURL;
+            }
+        };
+        image.src = base64Img;
+        fileObject.base64Img = base64Img;
+        fileObject.name = file.name;
+
         const isJpgOrPng = file.type === 'image/png';
         if (!isJpgOrPng) {
             message.error('請上傳PNG檔!');
         }
+        setFileList((before) => [...before, fileObject]);
+
         return isJpgOrPng ? true : Upload.LIST_IGNORE;
-    }
-
-    function handleCancel() {
-        setPreviewVisible(false);
-    }
-
-    async function handlePreview(file) {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-            const image = new Image();
-            image.onload = () => {
-                file.qrCodeSize = [image.width, image.height];
-            };
-            image.src = file.preview;
-        }
-        setpreviewImage(file.url || file.preview);
-        setPreviewVisible(true);
-        setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     }
 
     function handleChangeCustomize(e, block) {
@@ -91,30 +88,60 @@ function BatchImg() {
         if (block === 'size') setCustomizeSize(value);
     }
 
-    async function handleRenderImage() {
+    function handleRenderImage() {
         setRunSwitch(true);
-    }
-
-    function resizeImageUrl(target, size) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const resizeImg = new Image();
-
-        const width = (target.qrCodeSize[0] / 4) * size;
-        const height = (target.qrCodeSize[1] / 4) * size;
-
-        resizeImg.src = target.preview;
-        canvas.width = width;
-        canvas.height = height;
-
-        ctx.drawImage(resizeImg, 0, 0, width, height);
-        const dataURL = canvas.toDataURL('image/png');
-
-        return dataURL;
     }
 
     function handleQrCodeSize(e) {
         setQrCodeSize(e.target.value);
+    }
+
+    function handleChangeZipName(e) {
+        setZipName(e.target.value);
+    }
+
+    function handleReset() {
+        setFileList([]);
+        setRunSwitch(false);
+        setZipName('');
+        setCustomizeSize(2);
+        setCustomizeName(2);
+    }
+
+    function handleSave() {
+        const floderName = zipName || fileList[0].name.replace('.png', '');
+        const zip = new JSZip();
+        let src = '';
+        let name = '';
+        for (let i = 0; i < fileList.length; i++) {
+            let folderName = fileList[i].name.replace('.png', '');
+            name = fileList[i].name;
+            var img = zip.folder(folderName);
+
+            for (let j = 0; j < fileList[i].resizeBase64Img.length; j++) {
+                src = fileList[i].resizeBase64Img[j].replace('data:image/png;base64,', '');
+                // console.log('src', src);
+                if (j === 0) {
+                    var two = img.folder('2x');
+                    two.file(name, src, { base64: true });
+                }
+                if (j === 1) {
+                    var three = img.folder('3x');
+                    three.file(name, src, { base64: true });
+                }
+                if (j === 2) {
+                    var xxhdpi = img.folder('xxhdpi');
+                    xxhdpi.file(name, src, { base64: true });
+                }
+                if (j === 3) {
+                    var xxxhdpi = img.folder('xxxhdpi');
+                    xxxhdpi.file(name, src, { base64: true });
+                }
+            }
+        }
+        zip.generateAsync({ type: 'blob' }).then(function (content) {
+            saveAs(content, floderName);
+        });
     }
 
     return (
@@ -128,17 +155,12 @@ function BatchImg() {
                             </TitleRoot>
                             <UploadRoot
                                 listType="picture-card"
+                                showUploadList={false}
                                 multiple={true}
                                 beforeUpload={beforeUpload}
-                                onChange={handleChange}
-                                onPreview={handlePreview}
-                                fileList={fileList}
                             >
                                 {uploadButton}
                             </UploadRoot>
-                            <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
-                                <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                            </Modal>
                         </Col>
                         <Col span={10}>
                             <TitleRoot size={20} borderBottom>
@@ -184,6 +206,10 @@ function BatchImg() {
                                     )}
                                 </CustomizeRoot>
                             </InputRoot>
+                            <InputRoot>
+                                <p>壓縮檔名稱</p>
+                                <Input size="small" value={zipName} onChange={handleChangeZipName} />
+                            </InputRoot>
                         </Col>
                         <Col span={4} style={{ display: 'flex', flexDirection: 'column' }}>
                             <TitleRoot size={20} borderBottom>
@@ -192,7 +218,13 @@ function BatchImg() {
                             <Button type="primary" size="large" block onClick={handleRenderImage}>
                                 執行圖片縮放
                             </Button>
-                            <Button type="danger" size="large" block style={{ marginTop: '10px' }}>
+                            <Button
+                                type="danger"
+                                size="large"
+                                block
+                                style={{ marginTop: '10px' }}
+                                onClick={handleReset}
+                            >
                                 重置
                             </Button>
                             <Button
@@ -205,7 +237,13 @@ function BatchImg() {
                             >
                                 TinyPng網站
                             </Button>
-                            <Button type="primary" size="large" block style={{ marginTop: '10px' }}>
+                            <Button
+                                type="primary"
+                                size="large"
+                                block
+                                style={{ marginTop: '10px' }}
+                                onClick={handleSave}
+                            >
                                 打包下載
                             </Button>
                         </Col>
@@ -215,21 +253,21 @@ function BatchImg() {
             <BatchImgBody>
                 <Row gutter={[16, 16]}>
                     {runSwitch &&
-                        fileList.map((row) => {
-                            return (
-                                multiple &&
-                                multiple.map((row2, index2) => {
-                                    return (
-                                        <Col span={6}>
-                                            <IconCard
-                                                id={`${row.originFileObj.name}${index2}`}
-                                                size={(row.qrCodeSize[0] / 4) * row2}
-                                                src={resizeImageUrl(row, row2)}
-                                            />
-                                        </Col>
-                                    );
-                                })
-                            );
+                        fileList.map((row, index) => {
+                            return row.resizeBase64Img.map((row2, index2) => {
+                                return (
+                                    <Col span={6} key={row.name + index2}>
+                                        <IconCard
+                                            id={index}
+                                            src={row2}
+                                            size={(row.qrCodeSize[0] / 4) * multiple[index2]}
+                                            BatchImg
+                                            name={row.name}
+                                            multiple={multiple[index2]}
+                                        />
+                                    </Col>
+                                );
+                            });
                         })}
                 </Row>
             </BatchImgBody>
