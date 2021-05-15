@@ -109,38 +109,66 @@ function BatchImg() {
     }
 
     function handleSave() {
-        const floderName = zipName || fileList[0].name.replace('.png', '');
+        const folderName = zipName || '圖標';
         const zip = new JSZip();
         let src = '';
         let name = '';
-        for (let i = 0; i < fileList.length; i++) {
-            let folderName = fileList[i].name.replace('.png', '');
-            name = fileList[i].name;
-            var img = zip.folder(folderName);
-
-            for (let j = 0; j < fileList[i].resizeBase64Img.length; j++) {
-                src = fileList[i].resizeBase64Img[j].replace('data:image/png;base64,', '');
-                // console.log('src', src);
-                if (j === 0) {
-                    var two = img.folder('2x');
-                    two.file(name, src, { base64: true });
-                }
-                if (j === 1) {
-                    var three = img.folder('3x');
-                    three.file(name, src, { base64: true });
-                }
-                if (j === 2) {
-                    var xxhdpi = img.folder('xxhdpi');
-                    xxhdpi.file(name, src, { base64: true });
-                }
-                if (j === 3) {
-                    var xxxhdpi = img.folder('xxxhdpi');
-                    xxxhdpi.file(name, src, { base64: true });
+        const img = zip.folder(folderName);
+        for (let i = 0; i < multiple.length; i++) {
+            for (let j = 0; j < fileList.length; j++) {
+                src = fileList[j].resizeBase64Img[i].replace('data:image/png;base64,', '');
+                console.log('src', src);
+                name = fileList[j].name;
+                switch (i) {
+                    case 0:
+                        const two = img.folder('2x');
+                        two.file(name, src, { base64: true });
+                        break;
+                    case 1:
+                        const three = img.folder('3x');
+                        three.file(name, src, { base64: true });
+                        break;
+                    case 2:
+                        const xxhdpi = img.folder('xxhdpi');
+                        xxhdpi.file(name, src, { base64: true });
+                        break;
+                    case 3:
+                        const xxxhdpi = img.folder('xxxhdpi');
+                        xxxhdpi.file(name, src, { base64: true });
+                        break;
+                    default:
+                        break;
                 }
             }
         }
+        // for (let i = 0; i < fileList.length; i++) {
+        //     let folderName = fileList[i].name.replace('.png', '');
+        //     name = fileList[i].name;
+        //     var img = zip.folder(folderName);
+
+        //     for (let j = 0; j < fileList[i].resizeBase64Img.length; j++) {
+        //         src = fileList[i].resizeBase64Img[j].replace('data:image/png;base64,', '');
+        //         // console.log('src', src);
+        //         if (j === 0) {
+        //             var two = img.folder('2x');
+        //             two.file(name, src, { base64: true });
+        //         }
+        //         if (j === 1) {
+        //             var three = img.folder('3x');
+        //             three.file(name, src, { base64: true });
+        //         }
+        //         if (j === 2) {
+        //             var xxhdpi = img.folder('xxhdpi');
+        //             xxhdpi.file(name, src, { base64: true });
+        //         }
+        //         if (j === 3) {
+        //             var xxxhdpi = img.folder('xxxhdpi');
+        //             xxxhdpi.file(name, src, { base64: true });
+        //         }
+        //     }
+        // }
         zip.generateAsync({ type: 'blob' }).then(function (content) {
-            saveAs(content, floderName);
+            saveAs(content, folderName);
         });
     }
 
