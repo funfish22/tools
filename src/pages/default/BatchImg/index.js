@@ -4,7 +4,7 @@ import { MyContext } from '@reducers';
 
 import { getBase64 } from '@utils/image';
 
-import { Form, Row, Col, Upload, message, Input, Button, Radio } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
@@ -232,7 +232,7 @@ function BatchImg() {
                                         <Radio value={1}>是</Radio>
                                         <Radio value={2}>否</Radio>
                                     </Radio.Group>
-                                    {customizeSize === 1 && (
+                                    {/* {customizeSize === 1 && (
                                         <Input.TextArea
                                             rows={3}
                                             placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔"
@@ -240,7 +240,7 @@ function BatchImg() {
                                             value={qrCodeSize}
                                             onChange={handleQrCodeSize}
                                         />
-                                    )}
+                                    )} */}
                                 </CustomizeRoot>
                             </InputRoot>
                             <InputRoot>
@@ -299,13 +299,18 @@ function BatchImg() {
                             return row.resizeBase64Img.map((row2, index2) => {
                                 return (
                                     <React.Fragment key={row.name + index2}>
-                                        {index2 === 0 && customizeName === 1 ? (
+                                        {index2 === 0 && (
                                             <Col span={24}>
+                                                <Divider>{row.copyName}</Divider>
+                                            </Col>
+                                        )}
+                                        {index2 === 0 && customizeName === 1 ? (
+                                            <Col span={12}>
                                                 <Row align="middle">
-                                                    <Col span={2}>
+                                                    <Col span={4}>
                                                         <p style={{ marginBottom: 0 }}>自定義名稱</p>
                                                     </Col>
-                                                    <Col span={22}>
+                                                    <Col span={20}>
                                                         <Input
                                                             placeholder="輸入完成請按下'Enter'鍵"
                                                             onKeyPress={(e) => handleChangeName(e, row.base64Img)}
@@ -314,6 +319,22 @@ function BatchImg() {
                                                 </Row>
                                             </Col>
                                         ) : null}
+                                        {index2 === 0 && customizeSize === 1 ? (
+                                            <Col span={12}>
+                                                <Row align="middle">
+                                                    <Col span={4}>
+                                                        <p style={{ marginBottom: 0 }}>自定義尺寸</p>
+                                                    </Col>
+                                                    <Col span={20}>
+                                                        <Input
+                                                            placeholder="輸入完成請按下'Enter'鍵"
+                                                            onKeyPress={(e) => handleChangeName(e, row.base64Img)}
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        ) : null}
+                                        {index2 === 0 && <Col span={24} style={{ padding: 0 }}></Col>}
                                         <Col span={6}>
                                             <IconCard
                                                 id={index}
