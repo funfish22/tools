@@ -164,7 +164,7 @@ function QRcode() {
             <QRcodeBody>
                 {qrCode && (
                     <Col span={6}>
-                        <IconCard size={150} src={qrCode} webId={webId} />
+                        <IconCard size={[150, 150]} src={qrCode} webId={webId} />
                     </Col>
                 )}
             </QRcodeBody>

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Input } from 'antd';
 
 function IconCard(props) {
-    const { size, src, id, webId, version, BatchImg, name, multiple, changeName } = props;
+    const { size, src, id, webId, version, BatchImg, name, multiple, changeName, onChangeName } = props;
     function reName() {
         if (size !== 128) {
             if (version === 1) {
@@ -26,16 +26,22 @@ function IconCard(props) {
             return `${name} ${multiple}倍`;
         }
     }
-    console.log('changeName', changeName);
     return (
         <IconCardRoot>
             <h3>
-                {size} x {size}
+                {size[0]} x {size[1]}
             </h3>
             <div className="img_img">
-                <img src={src} id={'resizeImg' + (id + 1)} />
+                <img src={src} id={'resizeImg' + (id + 1)} alt={name} />
             </div>
-            {changeName ? <Input /> : <p id={'iconName' + (id + 1)}>{reName()}</p>}
+            {changeName ? (
+                <>
+                    <p id={'iconName' + (id + 1)}>{reName()}</p>{' '}
+                    <Input size="small" style={{ marginTop: '11.2px' }} onChange={onChangeName} />
+                </>
+            ) : (
+                <p id={'iconName' + (id + 1)}>{reName()}</p>
+            )}
         </IconCardRoot>
     );
 }

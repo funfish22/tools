@@ -36,9 +36,10 @@ function BatchImg() {
 
     useEffect(() => {
         setH1Title('遊戲圖片批次產圖工具');
-    });
+    }, [setH1Title, fileList]);
 
     async function beforeUpload(file) {
+        setRunSwitch(false);
         const fileObject = {};
         const base64Img = await getBase64(file);
         const image = new Image();
@@ -50,8 +51,8 @@ function BatchImg() {
                 const ctx = canvas.getContext('2d');
                 const resizeImg = new Image();
 
-                const width = (fileObject.qrCodeSize[0] / 4) * multiple[i];
-                const height = (fileObject.qrCodeSize[1] / 4) * multiple[i];
+                const width = Math.ceil((fileObject.qrCodeSize[0] / 4) * multiple[i]);
+                const height = Math.ceil((fileObject.qrCodeSize[1] / 4) * multiple[i]);
 
                 resizeImg.src = base64Img;
                 canvas.width = width;
@@ -65,6 +66,7 @@ function BatchImg() {
         image.src = base64Img;
         fileObject.base64Img = base64Img;
         fileObject.name = file.name;
+        fileObject.copyName = file.name;
 
         const isJpgOrPng = file.type === 'image/png';
         if (!isJpgOrPng) {
@@ -79,6 +81,21 @@ function BatchImg() {
         const value = e.target.value;
         if (block === 'name') setCustomizeName(value);
         if (block === 'size') setCustomizeSize(value);
+        if (value === 2 && block === 'name') {
+            fileList.map((row) => {
+                return (row.name = row.copyName);
+            });
+        }
+    }
+
+    function handleChangeName(e, src) {
+        const newFileList = fileList.filter((row) => {
+            if (row.base64Img === src) {
+                row.name = `${e.target.value}.png`;
+            }
+            return row;
+        });
+        if (e.key === 'Enter') setFileList(newFileList);
     }
 
     function handleRenderImage() {
@@ -196,13 +213,13 @@ function BatchImg() {
                                         <Radio value={1}>是</Radio>
                                         <Radio value={2}>否</Radio>
                                     </Radio.Group>
-                                    {customizeName === 1 && (
+                                    {/* {customizeName === 1 && (
                                         <Input.TextArea
                                             rows={4}
                                             placeholder="多張圖片，請以 , 做區隔"
                                             style={{ resize: 'none', marginTop: '10px' }}
                                         />
-                                    )}
+                                    )} */}
                                 </CustomizeRoot>
                             </InputRoot>
                             <InputRoot>
@@ -228,7 +245,12 @@ function BatchImg() {
                             </InputRoot>
                             <InputRoot>
                                 <p>壓縮檔名稱</p>
-                                <Input size="small" value={zipName} onChange={handleChangeZipName} />
+                                <Input
+                                    placeholder="請輸入壓縮檔名稱"
+                                    size="small"
+                                    value={zipName}
+                                    onChange={handleChangeZipName}
+                                />
                             </InputRoot>
                         </Col>
                         <Col span={4} style={{ display: 'flex', flexDirection: 'column' }}>
@@ -276,17 +298,36 @@ function BatchImg() {
                         fileList.map((row, index) => {
                             return row.resizeBase64Img.map((row2, index2) => {
                                 return (
-                                    <Col span={6} key={row.name + index2}>
-                                        <IconCard
-                                            id={index}
-                                            src={row2}
-                                            size={(row.qrCodeSize[0] / 4) * multiple[index2]}
-                                            BatchImg
-                                            name={row.name}
-                                            multiple={multiple[index2]}
-                                            changeName={customizeName === 1}
-                                        />
-                                    </Col>
+                                    <React.Fragment key={row.name + index2}>
+                                        {index2 === 0 && customizeName === 1 ? (
+                                            <Col span={24}>
+                                                <Row align="middle">
+                                                    <Col span={2}>
+                                                        <p style={{ marginBottom: 0 }}>自定義名稱</p>
+                                                    </Col>
+                                                    <Col span={22}>
+                                                        <Input
+                                                            placeholder="輸入完成請按下'Enter'鍵"
+                                                            onKeyPress={(e) => handleChangeName(e, row.base64Img)}
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        ) : null}
+                                        <Col span={6}>
+                                            <IconCard
+                                                id={index}
+                                                src={row2}
+                                                size={[
+                                                    Math.ceil((row.qrCodeSize[0] / 4) * multiple[index2]),
+                                                    Math.ceil((row.qrCodeSize[1] / 4) * multiple[index2]),
+                                                ]}
+                                                BatchImg
+                                                name={row.name}
+                                                multiple={multiple[index2]}
+                                            />
+                                        </Col>
+                                    </React.Fragment>
                                 );
                             });
                         })}

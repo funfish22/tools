@@ -121,7 +121,6 @@ function ResizeIcon() {
                 .getAttribute('src')
                 .replace('data:image/png;base64,', '');
             name = document.getElementById(`iconName${i + 1}`).textContent;
-            console.log('src', src);
             zip.file(name, src, { base64: true });
         }
         zip.generateAsync({ type: 'blob' }).then(function (content) {
@@ -237,7 +236,7 @@ function ResizeIcon() {
                             <Col span={6} key={row}>
                                 <IconCard
                                     id={index}
-                                    size={row}
+                                    size={[row, row]}
                                     src={resizeImageUrl(row)}
                                     version={valueVersion}
                                     webId={webId}
