@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { MyContext } from '@reducers';
 
+import { getBase64 } from '@utils/image';
+
 import { Form, Row, Col, Upload, message, Input, Button, Radio } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -12,15 +14,6 @@ import { saveAs } from 'file-saver';
 
 import Title from '@component/atoms/Title';
 import IconCard from '@component/molecules/IconCard';
-
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-    });
-}
 
 function BatchImg() {
     const [fileList, setFileList] = useState([]);
@@ -117,7 +110,6 @@ function BatchImg() {
         for (let i = 0; i < multiple.length; i++) {
             for (let j = 0; j < fileList.length; j++) {
                 src = fileList[j].resizeBase64Img[i].replace('data:image/png;base64,', '');
-                console.log('src', src);
                 name = fileList[j].name;
                 switch (i) {
                     case 0:
@@ -292,6 +284,7 @@ function BatchImg() {
                                             BatchImg
                                             name={row.name}
                                             multiple={multiple[index2]}
+                                            changeName={customizeName === 1}
                                         />
                                     </Col>
                                 );

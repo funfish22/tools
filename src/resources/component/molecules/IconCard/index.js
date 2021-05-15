@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-function IconCard(props) {
-    const { size, src, id, webId, version, BatchImg, name, multiple } = props;
+import { Input } from 'antd';
 
+function IconCard(props) {
+    const { size, src, id, webId, version, BatchImg, name, multiple, changeName } = props;
     function reName() {
         if (size !== 128) {
             if (version === 1) {
@@ -25,7 +26,7 @@ function IconCard(props) {
             return `${name} ${multiple}倍`;
         }
     }
-
+    console.log('changeName', changeName);
     return (
         <IconCardRoot>
             <h3>
@@ -34,7 +35,7 @@ function IconCard(props) {
             <div className="img_img">
                 <img src={src} id={'resizeImg' + (id + 1)} />
             </div>
-            <p id={'iconName' + (id + 1)}>{reName()}</p>
+            {changeName ? <Input /> : <p id={'iconName' + (id + 1)}>{reName()}</p>}
         </IconCardRoot>
     );
 }
