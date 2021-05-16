@@ -4,7 +4,7 @@ import { MyContext } from '@reducers';
 
 import { getBase64 } from '@utils/image';
 
-import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
@@ -20,10 +20,13 @@ function BatchImg() {
     const [customizeSize, setCustomizeSize] = useState(2);
     const [customizeName, setCustomizeName] = useState(2);
     const [runSwitch, setRunSwitch] = useState(false);
-    const [qrCodeSize, setQrCodeSize] = useState('');
+    const [imageSize, setImageSize] = useState('');
     const [zipName, setZipName] = useState('');
+    const [alert, setAlert] = useState(false);
+    const [alertText, setAlertText] = useState('');
+    const [firstImageSize, setFirstImageSize] = useState([]);
 
-    const multiple = [2, 3, 3, 4];
+    const [multiple, setMultiple] = useState([2, 3, 3, 4]);
 
     const { setH1Title } = useContext(MyContext);
 
@@ -36,7 +39,11 @@ function BatchImg() {
 
     useEffect(() => {
         setH1Title('遊戲圖片批次產圖工具');
-    }, [setH1Title, fileList]);
+
+        if (fileList.length) {
+            setFirstImageSize(fileList[0].qrCodeSize);
+        }
+    }, [setH1Title, fileList, firstImageSize, multiple]);
 
     async function beforeUpload(file) {
         setRunSwitch(false);
@@ -46,6 +53,7 @@ function BatchImg() {
         image.onload = () => {
             fileObject.qrCodeSize = [image.width, image.height];
             fileObject.resizeBase64Img = [];
+            fileObject.copyResizeBase64Img = [];
             for (let i = 0; i < multiple.length; i++) {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -61,6 +69,7 @@ function BatchImg() {
                 ctx.drawImage(resizeImg, 0, 0, width, height);
                 const dataURL = canvas.toDataURL('image/png');
                 fileObject.resizeBase64Img[i] = dataURL;
+                fileObject.copyResizeBase64Img[i] = dataURL;
             }
         };
         image.src = base64Img;
@@ -100,11 +109,65 @@ function BatchImg() {
 
     function handleRenderImage() {
         setRunSwitch(true);
+        if (fileList.length === 0 && customizeSize === 1 && imageSize === '') {
+            setAlertText('請先上傳圖標在設定尺寸');
+            setAlert(true);
+
+            setTimeout(() => {
+                setAlert(false);
+                setAlertText('');
+            }, 2000);
+        }
     }
 
-    function handleQrCodeSize(e) {
-        setQrCodeSize(e.target.value);
+    function handleImageSize(e) {
+        setImageSize(e.target.value);
+        let newMultipleArray = [];
+        let newMultiple = [];
+        newMultipleArray = e.target.value.split(',').map(Number);
+        newMultipleArray.forEach((row) => {
+            newMultiple.push(row / 64);
+        });
+        setMultiple(newMultiple);
     }
+
+    // function handleMultiple(e) {
+    //     if (e.key === 'Enter') {
+    //         const oldMultiple = fileList[0].qrCodeSize;
+    //         let newMultipleArray = [];
+    //         let newMultiple = [];
+    //         newMultipleArray = imageSize.split(',').map(Number);
+    //         let smallSize = oldMultiple[0] / 4;
+    //         newMultipleArray.forEach((row) => {
+    //             newMultiple.push(row / smallSize);
+    //         });
+    //         setMultiple(newMultiple);
+
+    //         const newFileList = fileList.map((row) => {
+    //             row.resizeBase64Img = [];
+
+    //             for (let i = 0; i < newMultiple.length; i++) {
+    //                 const canvas = document.createElement('canvas');
+    //                 const ctx = canvas.getContext('2d');
+    //                 const resizeImg = new Image();
+
+    //                 const width = Math.ceil(smallSize * newMultiple[i]);
+    //                 const height = Math.ceil(smallSize * newMultiple[i]);
+
+    //                 resizeImg.src = row.base64Img;
+    //                 canvas.width = width;
+    //                 canvas.height = height;
+
+    //                 ctx.drawImage(resizeImg, 0, 0, width, height);
+    //                 const dataURL = canvas.toDataURL('image/png');
+    //                 row.resizeBase64Img[i] = dataURL;
+    //                 row.copyResizeBase64Img[i] = dataURL;
+    //             }
+    //             return row;
+    //         });
+    //         setFileList(newFileList);
+    //     }
+    // }
 
     function handleChangeZipName(e) {
         setZipName(e.target.value);
@@ -116,6 +179,11 @@ function BatchImg() {
         setZipName('');
         setCustomizeSize(2);
         setCustomizeName(2);
+        setMultiple([2, 3, 3, 4]);
+    }
+
+    function handleAlertClose() {
+        setAlert(false);
     }
 
     function handleSave() {
@@ -183,6 +251,8 @@ function BatchImg() {
 
     return (
         <BatchImgRoot>
+            {alert && <AlertRoot type="error" message={alertText} banner closable onClose={handleAlertClose} />}
+
             <BatchImgHeader>
                 <Form>
                     <Row gutter={32}>
@@ -232,15 +302,16 @@ function BatchImg() {
                                         <Radio value={1}>是</Radio>
                                         <Radio value={2}>否</Radio>
                                     </Radio.Group>
-                                    {/* {customizeSize === 1 && (
+                                    {customizeSize === 1 && (
                                         <Input.TextArea
                                             rows={3}
-                                            placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔"
+                                            placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔，輸入完畢請按下'Enter'鍵"
                                             style={{ resize: 'none', marginTop: '10px' }}
-                                            value={qrCodeSize}
-                                            onChange={handleQrCodeSize}
+                                            value={imageSize}
+                                            onChange={handleImageSize}
+                                            // onKeyPress={handleMultiple}
                                         />
-                                    )} */}
+                                    )}
                                 </CustomizeRoot>
                             </InputRoot>
                             <InputRoot>
@@ -428,4 +499,11 @@ const BatchImgBody = styled.section`
     max-width: 1000px;
     margin: 0 auto;
     padding: 30px 0;
+`;
+
+const AlertRoot = styled(Alert)`
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 `;
