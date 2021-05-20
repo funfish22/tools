@@ -21,6 +21,7 @@ function BatchImg() {
     const [customizeName, setCustomizeName] = useState(2);
     const [runSwitch, setRunSwitch] = useState(false);
     const [imageSize, setImageSize] = useState('');
+    const [originalSize, setOriginalSize] = useState('');
     const [zipName, setZipName] = useState('');
     const [alert, setAlert] = useState(false);
     const [alertText, setAlertText] = useState('');
@@ -129,6 +130,11 @@ function BatchImg() {
             newMultiple.push(row / 64);
         });
         setMultiple(newMultiple);
+    }
+
+    function handleOriginalSize(e) {
+        const value = e.target.value;
+        setOriginalSize(value);
     }
 
     // function handleMultiple(e) {
@@ -292,7 +298,7 @@ function BatchImg() {
                                     )} */}
                                 </CustomizeRoot>
                             </InputRoot>
-                            <InputRoot>
+                            {/* <InputRoot>
                                 <p>自定義尺寸</p>
                                 <CustomizeRoot>
                                     <Radio.Group
@@ -302,6 +308,14 @@ function BatchImg() {
                                         <Radio value={1}>是</Radio>
                                         <Radio value={2}>否</Radio>
                                     </Radio.Group>
+                                    {customizeSize === 1 && (
+                                        <Input
+                                            placeholder="請輸入原始圖片尺寸，請以 , 做長寬區隔"
+                                            style={{ resize: 'none', marginTop: '10px', width: '100%' }}
+                                            value={originalSize}
+                                            onChange={handleOriginalSize}
+                                        />
+                                    )}
                                     {customizeSize === 1 && (
                                         <Input.TextArea
                                             rows={3}
@@ -313,7 +327,7 @@ function BatchImg() {
                                         />
                                     )}
                                 </CustomizeRoot>
-                            </InputRoot>
+                            </InputRoot> */}
                             <InputRoot>
                                 <p>壓縮檔名稱</p>
                                 <Input

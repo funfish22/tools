@@ -16,12 +16,12 @@ const CardArray = [
         color: '#000',
         link: '/qrCode',
     },
-    {
-        title: '遊戲圖標批次產圖工具',
-        bgColor: '#b7eb8f',
-        color: '#000',
-        link: '/batchImg',
-    },
+    // {
+    //     title: '遊戲圖標批次產圖工具',
+    //     bgColor: '#b7eb8f',
+    //     color: '#000',
+    //     link: '/batchImg',
+    // },
 ];
 
 function CardRoot() {

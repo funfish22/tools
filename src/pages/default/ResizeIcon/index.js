@@ -265,9 +265,9 @@ const ResizeIconHeader = styled.section`
 
 const UploadRoot = styled(Upload)`
     .ant-upload-select-picture-card {
-        width: 234px;
-        height: 234px;
-        padding: 20px;
+        width: 192px;
+        height: 192px;
+        margin-bottom: 40px;
     }
 `;
 
