@@ -4,7 +4,7 @@ import { MyContext } from '@reducers';
 
 import { getBase64 } from '@utils/image';
 
-import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
@@ -14,6 +14,8 @@ import { saveAs } from 'file-saver';
 
 import Title from '@component/atoms/Title';
 import IconCard from '@component/molecules/IconCard';
+
+let num = 0;
 
 function BatchImg() {
     const [fileList, setFileList] = useState([]);
@@ -85,6 +87,18 @@ function BatchImg() {
         setFileList((before) => [...before, fileObject]);
 
         return isJpgOrPng ? true : Upload.LIST_IGNORE;
+    }
+
+    function onChange(info) {
+        if (info.file.status === 'error') {
+            num = num + 1;
+            setAlert(true);
+            setAlertText('上傳中');
+        }
+        if (num === info.fileList.length) {
+            setAlert(false);
+            setAlertText('');
+        }
     }
 
     function handleChangeCustomize(e, block) {
@@ -258,7 +272,11 @@ function BatchImg() {
     return (
         <BatchImgRoot>
             {alert && <AlertRoot type="error" message={alertText} banner closable onClose={handleAlertClose} />}
-
+            {alert && (
+                <SpinRoot>
+                    <Spin size="large" />
+                </SpinRoot>
+            )}
             <BatchImgHeader>
                 <Form>
                     <Row gutter={32}>
@@ -271,6 +289,7 @@ function BatchImg() {
                                 showUploadList={false}
                                 multiple={true}
                                 beforeUpload={beforeUpload}
+                                onChange={onChange}
                             >
                                 {uploadButton}
                             </UploadRoot>
@@ -520,4 +539,18 @@ const AlertRoot = styled(Alert)`
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 51;
+`;
+
+const SpinRoot = styled.div`
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
 `;

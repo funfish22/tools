@@ -23,14 +23,14 @@ export const routes = [
         ),
         exact: true,
     },
-    // {
-    //     name: '遊戲圖片批次產圖工具',
-    //     path: '/batchImg',
-    //     component: React.lazy(() =>
-    //         import(/*webpackChunkName:"BatchImg"*/ /*webpackMode:"lazy"*/ '@page/default/BatchImg')
-    //     ),
-    //     exact: true,
-    // },
+    {
+        name: '遊戲圖片批次產圖工具',
+        path: '/batchImg',
+        component: React.lazy(() =>
+            import(/*webpackChunkName:"BatchImg"*/ /*webpackMode:"lazy"*/ '@page/default/BatchImg')
+        ),
+        exact: true,
+    },
     {
         name: 'Page Not Found',
         path: '*',
