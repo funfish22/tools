@@ -45,6 +45,11 @@ function ResizeIcon() {
                 setAlert(true);
                 setImageUrl('');
             }
+            if (loadImgSize.naturalWidth !== loadImgSize.naturalHeight) {
+                setAlertText(`圖片尺寸錯誤，請上傳${imgSize[0]}x${imgSize[0]}的圖片`);
+                setAlert(true);
+                setImageUrl('');
+            }
         };
 
         setTimeout(() => {
@@ -75,18 +80,13 @@ function ResizeIcon() {
 
     function handleRenderImage() {
         const orig_src = document.querySelector('.ant-upload-select-picture-card img');
-        console.log(orig_src);
+        console.log('orig_src', orig_src.width);
         if (!webId) {
             setAlertText('請輸入站點ID');
             setAlert(true);
         } else if (!imageUrl) {
             setAlertText('請上傳圖片');
             setAlert(true);
-        } else if (orig_src.width < imgSize[0] || orig_src.height < imgSize[0]) {
-            console.log('123');
-            setAlertText(`圖片尺寸錯誤，請上傳${imgSize[0]}x${imgSize[0]}的圖片`);
-            setAlert(true);
-            setImageUrl('');
         } else {
             setResizeImg(true);
         }
