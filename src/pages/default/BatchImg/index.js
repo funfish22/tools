@@ -57,6 +57,8 @@ function BatchImg() {
 
     async function beforeUpload(file) {
         setRunSwitch(false);
+        setAlert(true);
+        setAlertText('上傳中');
         const fileObject = {};
         const base64Img = await getBase64(file);
         const image = new Image();
@@ -97,8 +99,6 @@ function BatchImg() {
     }
 
     function onChange(info) {
-        setAlert(true);
-        setAlertText('上傳中');
         if (info.file.status === 'done') {
             num = num + 1;
         }
