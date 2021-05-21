@@ -6,11 +6,11 @@ import { Input } from 'antd';
 function IconCard(props) {
     const { size, src, id, webId, version, BatchImg, name, multiple, changeName, onChangeName } = props;
     function reName() {
-        if (size !== 128) {
+        if (size[0] !== 128) {
             if (version === 1) {
-                return `app_icon_${size}x${size}.png`;
+                return `app_icon_${size[0]}x${size[1]}.png`;
             } else if (version === 2) {
-                return `app_icon_effects_${size}x${size}.png`;
+                return `app_icon_effects_${size[0]}x${size[0]}.png`;
             }
         } else {
             if (version === 1) {
