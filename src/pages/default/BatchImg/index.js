@@ -99,13 +99,19 @@ function BatchImg() {
     function onChange(info) {
         setAlert(true);
         setAlertText('上傳中');
-        if (info.file.status === 'error') {
+        if (info.file.status === 'done') {
             num = num + 1;
         }
         if (num === info.fileList.length) {
             setAlert(false);
             setAlertText('');
         }
+    }
+
+    function dummyRequest(info) {
+        setTimeout(() => {
+            info.onSuccess('ok');
+        }, 0);
     }
 
     function handleChangeCustomize(e, block) {
@@ -297,6 +303,7 @@ function BatchImg() {
                                 multiple={true}
                                 beforeUpload={beforeUpload}
                                 onChange={onChange}
+                                customRequest={dummyRequest}
                             >
                                 {uploadButton}
                             </UploadRoot>
