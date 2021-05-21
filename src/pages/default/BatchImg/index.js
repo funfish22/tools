@@ -41,6 +41,13 @@ function BatchImg() {
     );
 
     useEffect(() => {
+        return () => {
+            num = 0;
+            setFileList([]);
+        };
+    }, []);
+
+    useEffect(() => {
         setH1Title('遊戲圖片批次產圖工具');
 
         if (fileList.length) {
