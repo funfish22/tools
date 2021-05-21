@@ -28,6 +28,7 @@ function BatchImg() {
     const [alert, setAlert] = useState(false);
     const [alertText, setAlertText] = useState('');
     const [firstImageSize, setFirstImageSize] = useState([]);
+    const [imgAmount, setImgAmount] = useState(0);
 
     const [multiple, setMultiple] = useState([2, 3, 3, 4]);
 
@@ -42,7 +43,7 @@ function BatchImg() {
 
     useEffect(() => {
         return () => {
-            num = 0;
+            setImgAmount(0);
             setFileList([]);
         };
     }, []);
@@ -100,9 +101,9 @@ function BatchImg() {
 
     function onChange(info) {
         if (info.file.status === 'done') {
-            num = num + 1;
+            setImgAmount(imgAmount + 1);
         }
-        if (num === info.fileList.length) {
+        if (imgAmount + 1 === info.fileList.length) {
             setAlert(false);
             setAlertText('');
         }
