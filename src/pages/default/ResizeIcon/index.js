@@ -74,6 +74,12 @@ function ResizeIcon() {
         }
     }
 
+    function dummyRequest(info) {
+        setTimeout(() => {
+            info.onSuccess('ok');
+        }, 0);
+    }
+
     function handleChangeID(e) {
         setWebId(e.target.value);
     }
@@ -164,6 +170,7 @@ function ResizeIcon() {
                                 showUploadList={false}
                                 beforeUpload={beforeUpload}
                                 onChange={handleChange}
+                                customRequest={dummyRequest}
                             >
                                 {imageUrl ? (
                                     <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />

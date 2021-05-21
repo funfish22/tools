@@ -15,8 +15,6 @@ import { saveAs } from 'file-saver';
 import Title from '@component/atoms/Title';
 import IconCard from '@component/molecules/IconCard';
 
-let num = 0;
-
 function BatchImg() {
     const [fileList, setFileList] = useState([]);
     const [customizeSize, setCustomizeSize] = useState(2);
