@@ -79,8 +79,6 @@ function ResizeIcon() {
     }
 
     function handleRenderImage() {
-        const orig_src = document.querySelector('.ant-upload-select-picture-card img');
-        console.log('orig_src', orig_src.width);
         if (!webId) {
             setAlertText('請輸入站點ID');
             setAlert(true);
