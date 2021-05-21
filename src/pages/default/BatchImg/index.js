@@ -90,10 +90,10 @@ function BatchImg() {
     }
 
     function onChange(info) {
+        setAlert(true);
+        setAlertText('上傳中');
         if (info.file.status === 'error') {
             num = num + 1;
-            setAlert(true);
-            setAlertText('上傳中');
         }
         if (num === info.fileList.length) {
             setAlert(false);
@@ -271,7 +271,7 @@ function BatchImg() {
 
     return (
         <BatchImgRoot>
-            {alert && <AlertRoot type="error" message={alertText} banner closable onClose={handleAlertClose} />}
+            {alert && <AlertRoot type="error" message={alertText} banner />}
             {alert && (
                 <SpinRoot>
                     <Spin size="large" />
