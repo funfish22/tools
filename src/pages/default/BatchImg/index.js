@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import { MyContext } from '@reducers';
 
@@ -32,6 +32,8 @@ function BatchImg() {
 
     const { setH1Title } = useContext(MyContext);
 
+    const cardDom = useRef();
+
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -49,10 +51,15 @@ function BatchImg() {
     useEffect(() => {
         setH1Title('遊戲圖片批次產圖工具');
 
+        if (cardDom.current.children.length !== 0) {
+            setAlertText('');
+            setAlert(false);
+        }
+
         if (fileList.length) {
             setFirstImageSize(fileList[0].qrCodeSize);
         }
-    }, [setH1Title, fileList, firstImageSize, multiple]);
+    }, [setH1Title, fileList, firstImageSize, multiple, runSwitch]);
 
     async function beforeUpload(file) {
         setRunSwitch(false);
@@ -135,7 +142,14 @@ function BatchImg() {
     }
 
     function handleRenderImage() {
-        setRunSwitch(true);
+        if (fileList.length === 0) return;
+
+        setAlertText('圖片縮放執行中');
+        setAlert(true);
+        setTimeout(() => {
+            setRunSwitch(true);
+        }, 200);
+
         if (fileList.length === 0 && customizeSize === 1 && imageSize === '') {
             setAlertText('請先上傳圖標在設定尺寸');
             setAlert(true);
@@ -410,7 +424,7 @@ function BatchImg() {
                 </Form>
             </BatchImgHeader>
             <BatchImgBody>
-                <Row gutter={[16, 16]}>
+                <Row gutter={[16, 16]} ref={cardDom}>
                     {runSwitch &&
                         fileList.map((row, index) => {
                             return row.resizeBase64Img.map((row2, index2) => {
