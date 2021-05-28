@@ -311,7 +311,7 @@ function BatchImg() {
                     <Spin size="large" />
                 </SpinRoot>
             )}
-            {done && <AlertRoot type="success" message={alertText} banner />}
+            {done && <AlertSuccess type="success" message={alertText} banner />}
             <BatchImgHeader>
                 <Form>
                     <Row gutter={32}>
@@ -576,6 +576,15 @@ const AlertRoot = styled(Alert)`
     left: 50%;
     transform: translateX(-50%);
     z-index: 51;
+`;
+
+const AlertSuccess = styled(Alert)`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 51;
+    font-size: 22px;
 `;
 
 const SpinRoot = styled.div`
