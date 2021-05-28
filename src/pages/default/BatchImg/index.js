@@ -24,6 +24,7 @@ function BatchImg() {
     const [originalSize, setOriginalSize] = useState('');
     const [zipName, setZipName] = useState('');
     const [alert, setAlert] = useState(false);
+    const [done, setDone] = useState(false);
     const [alertText, setAlertText] = useState('');
     const [firstImageSize, setFirstImageSize] = useState([]);
     const [imgAmount, setImgAmount] = useState(0);
@@ -110,7 +111,11 @@ function BatchImg() {
         }
         if (imgAmount + 1 === info.fileList.length) {
             setAlert(false);
-            setAlertText('');
+            setAlertText('圖片上傳完成');
+            setDone(true);
+            setTimeout(() => {
+                setDone(false);
+            }, 2000);
         }
     }
 
@@ -303,6 +308,7 @@ function BatchImg() {
                     <Spin size="large" />
                 </SpinRoot>
             )}
+            {done && <AlertRoot type="success" message={alertText} banner />}
             <BatchImgHeader>
                 <Form>
                     <Row gutter={32}>
