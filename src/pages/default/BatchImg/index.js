@@ -115,6 +115,7 @@ function BatchImg() {
             setDone(true);
             setTimeout(() => {
                 setDone(false);
+                setAlertText('');
             }, 2000);
         }
     }
@@ -148,7 +149,9 @@ function BatchImg() {
 
     function handleRenderImage() {
         if (fileList.length === 0) return;
+        if (cardDom.current.children.length !== 0) return;
 
+        setDone(false);
         setAlertText('圖片縮放執行中');
         setAlert(true);
         setTimeout(() => {
