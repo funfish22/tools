@@ -329,6 +329,14 @@ function BatchImg() {
                             >
                                 {uploadButton}
                             </UploadRoot>
+                            <RenderRow gutter={8}>
+                                {fileList &&
+                                    fileList.map((row, index) => (
+                                        <RenderCard key={index}>
+                                            <img src={row.base64Img} alt={row.name} />
+                                        </RenderCard>
+                                    ))}
+                            </RenderRow>
                         </Col>
                         <Col span={10}>
                             <TitleRoot size={20} borderBottom>
@@ -508,9 +516,9 @@ const BatchImgHeader = styled.section`
     form {
         max-width: 1000px;
         margin: 0 auto;
-    }
-    .ant-row {
-        min-height: 294px;
+        & > .ant-row {
+            min-height: 294px;
+        }
     }
 `;
 
@@ -598,4 +606,31 @@ const SpinRoot = styled.div`
     align-items: center;
     justify-content: center;
     z-index: 50;
+`;
+
+const RenderRow = styled(Row)`
+    max-height: 224px;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+        background-color: #83adee;
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        width: 5px;
+        border-radius: 5px;
+        background-color: #243d65;
+    }
+`;
+
+const RenderCard = styled.div`
+    width: 104px;
+    height: 104px;
+    background-color: #fafafa;
+    border: 1px dashed #d9d9d9;
+    margin: 4px;
+    img {
+        max-width: 100%;
+        height: auto;
+    }
 `;
