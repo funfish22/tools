@@ -629,6 +629,9 @@ const RenderCard = styled.div`
     background-color: #fafafa;
     border: 1px dashed #d9d9d9;
     margin: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     img {
         max-width: 100%;
         height: auto;
