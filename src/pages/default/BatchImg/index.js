@@ -81,7 +81,6 @@ function BatchImg() {
                 const resizeImg = new Image();
 
                 if (customizeSize === 1) {
-                    console.log('test');
                     width = Math.ceil(fileObject.qrCodeSize[0] * multiple[i]);
                     height = Math.ceil(fileObject.qrCodeSize[1] * multiple[i]);
                 } else {
@@ -92,8 +91,6 @@ function BatchImg() {
                 resizeImg.src = base64Img;
                 canvas.width = width;
                 canvas.height = height;
-
-                console.log('width', width, 'height', height);
 
                 ctx.drawImage(resizeImg, 0, 0, width, height);
                 const dataURL = canvas.toDataURL('image/png');
@@ -111,8 +108,6 @@ function BatchImg() {
             message.error('請上傳PNG檔!');
         }
         setFileList((before) => [...before, fileObject]);
-
-        console.log('fileList', fileList);
 
         return isJpgOrPng ? true : Upload.LIST_IGNORE;
     }
@@ -149,6 +144,8 @@ function BatchImg() {
         }
         if (value === 2 && block === 'size') {
             setMultiple([2, 3, 3, 4]);
+            setImageSize('');
+            setOriginalSize('');
             setFileList([]);
         }
         if (value === 1 && block === 'size') {
@@ -196,7 +193,6 @@ function BatchImg() {
         newMultipleArray.forEach((row) => {
             newMultiple.push(row / originalSize);
         });
-        console.log('newMultiple', newMultiple);
         setMultiple(newMultiple);
     }
 
@@ -213,10 +209,8 @@ function BatchImg() {
             newMultipleArray = imageSize.split(',').map(Number);
             // let smallSize = oldMultiple[0] / 4;
             newMultipleArray.forEach((row) => {
-                console.log('originalSize', originalSize);
                 newMultiple.push(row / originalSize);
             });
-            console.log('123', newMultiple);
             setMultiple(newMultiple);
 
             // const newFileList = fileList.map((row) => {
