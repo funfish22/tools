@@ -23,7 +23,7 @@ function IconCard(props) {
             return `${webId}_qrcode.png`;
         }
         if (BatchImg) {
-            return `${name} ${multiple}倍`;
+            return `${name} ${multiple}`;
         }
     }
     return (
@@ -36,11 +36,15 @@ function IconCard(props) {
             </div>
             {changeName ? (
                 <>
-                    <p id={'iconName' + (id + 1)}>{reName()}</p>{' '}
+                    <p className="card_name" id={'iconName' + (id + 1)}>
+                        {reName()}
+                    </p>{' '}
                     <Input size="small" style={{ marginTop: '11.2px' }} onChange={onChangeName} />
                 </>
             ) : (
-                <p id={'iconName' + (id + 1)}>{reName()}</p>
+                <p className="card_name" id={'iconName' + (id + 1)}>
+                    {reName()}
+                </p>
             )}
         </IconCardRoot>
     );
@@ -54,9 +58,11 @@ const IconCardRoot = styled.div`
     border-radius: 4px;
     padding: 10px;
     display: flex;
+    align-items: center;
     flex-direction: column;
 
     .img_img {
+        width: 192px;
         height: 192px;
         position: relative;
     }
@@ -78,5 +84,19 @@ const IconCardRoot = styled.div`
         margin-top: 10px;
         margin-bottom: 0;
         font-size: 16px;
+    }
+
+    .card_name {
+        max-width: 218px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        padding-right: 20px;
+        &:after {
+            position: absolute;
+            content: '倍';
+            right: 0;
+        }
     }
 `;

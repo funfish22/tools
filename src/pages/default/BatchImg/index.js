@@ -69,6 +69,8 @@ function BatchImg() {
         const fileObject = {};
         const base64Img = await getBase64(file);
         const image = new Image();
+        let width = 0;
+        let height = 0;
         image.onload = () => {
             fileObject.qrCodeSize = [image.width, image.height];
             fileObject.resizeBase64Img = [];
@@ -78,12 +80,20 @@ function BatchImg() {
                 const ctx = canvas.getContext('2d');
                 const resizeImg = new Image();
 
-                const width = Math.ceil((fileObject.qrCodeSize[0] / 4) * multiple[i]);
-                const height = Math.ceil((fileObject.qrCodeSize[1] / 4) * multiple[i]);
+                if (customizeSize === 1) {
+                    console.log('test');
+                    width = Math.ceil(fileObject.qrCodeSize[0] * multiple[i]);
+                    height = Math.ceil(fileObject.qrCodeSize[1] * multiple[i]);
+                } else {
+                    width = Math.ceil((fileObject.qrCodeSize[0] / 4) * multiple[i]);
+                    height = Math.ceil((fileObject.qrCodeSize[1] / 4) * multiple[i]);
+                }
 
                 resizeImg.src = base64Img;
                 canvas.width = width;
                 canvas.height = height;
+
+                console.log('width', width, 'height', height);
 
                 ctx.drawImage(resizeImg, 0, 0, width, height);
                 const dataURL = canvas.toDataURL('image/png');
@@ -101,6 +111,8 @@ function BatchImg() {
             message.error('請上傳PNG檔!');
         }
         setFileList((before) => [...before, fileObject]);
+
+        console.log('fileList', fileList);
 
         return isJpgOrPng ? true : Upload.LIST_IGNORE;
     }
@@ -134,6 +146,13 @@ function BatchImg() {
             fileList.map((row) => {
                 return (row.name = row.copyName);
             });
+        }
+        if (value === 2 && block === 'size') {
+            setMultiple([2, 3, 3, 4]);
+            setFileList([]);
+        }
+        if (value === 1 && block === 'size') {
+            setFileList([]);
         }
     }
 
@@ -175,8 +194,9 @@ function BatchImg() {
         let newMultiple = [];
         newMultipleArray = e.target.value.split(',').map(Number);
         newMultipleArray.forEach((row) => {
-            newMultiple.push(row / 64);
+            newMultiple.push(row / originalSize);
         });
+        console.log('newMultiple', newMultiple);
         setMultiple(newMultiple);
     }
 
@@ -185,43 +205,45 @@ function BatchImg() {
         setOriginalSize(value);
     }
 
-    // function handleMultiple(e) {
-    //     if (e.key === 'Enter') {
-    //         const oldMultiple = fileList[0].qrCodeSize;
-    //         let newMultipleArray = [];
-    //         let newMultiple = [];
-    //         newMultipleArray = imageSize.split(',').map(Number);
-    //         let smallSize = oldMultiple[0] / 4;
-    //         newMultipleArray.forEach((row) => {
-    //             newMultiple.push(row / smallSize);
-    //         });
-    //         setMultiple(newMultiple);
+    function handleMultiple(e) {
+        if (e.key === 'Enter') {
+            // const oldMultiple = fileList[0].qrCodeSize;
+            let newMultipleArray = [];
+            let newMultiple = [];
+            newMultipleArray = imageSize.split(',').map(Number);
+            // let smallSize = oldMultiple[0] / 4;
+            newMultipleArray.forEach((row) => {
+                console.log('originalSize', originalSize);
+                newMultiple.push(row / originalSize);
+            });
+            console.log('123', newMultiple);
+            setMultiple(newMultiple);
 
-    //         const newFileList = fileList.map((row) => {
-    //             row.resizeBase64Img = [];
+            // const newFileList = fileList.map((row) => {
+            //     row.resizeBase64Img = [];
 
-    //             for (let i = 0; i < newMultiple.length; i++) {
-    //                 const canvas = document.createElement('canvas');
-    //                 const ctx = canvas.getContext('2d');
-    //                 const resizeImg = new Image();
+            //     for (let i = 0; i < newMultiple.length; i++) {
+            //         const canvas = document.createElement('canvas');
+            //         const ctx = canvas.getContext('2d');
+            //         const resizeImg = new Image();
 
-    //                 const width = Math.ceil(smallSize * newMultiple[i]);
-    //                 const height = Math.ceil(smallSize * newMultiple[i]);
+            //         const width = Math.ceil(smallSize * newMultiple[i]);
+            //         const height = Math.ceil(smallSize * newMultiple[i]);
 
-    //                 resizeImg.src = row.base64Img;
-    //                 canvas.width = width;
-    //                 canvas.height = height;
+            //         resizeImg.src = row.base64Img;
+            //         canvas.width = width;
+            //         canvas.height = height;
 
-    //                 ctx.drawImage(resizeImg, 0, 0, width, height);
-    //                 const dataURL = canvas.toDataURL('image/png');
-    //                 row.resizeBase64Img[i] = dataURL;
-    //                 row.copyResizeBase64Img[i] = dataURL;
-    //             }
-    //             return row;
-    //         });
-    //         setFileList(newFileList);
-    //     }
-    // }
+            //         ctx.drawImage(resizeImg, 0, 0, width, height);
+            //         const dataURL = canvas.toDataURL('image/png');
+            //         row.resizeBase64Img[i] = dataURL;
+            //         row.copyResizeBase64Img[i] = dataURL;
+            //     }
+            //     return row;
+            // });
+            // setFileList(newFileList);
+        }
+    }
 
     function handleChangeZipName(e) {
         setZipName(e.target.value);
@@ -234,6 +256,8 @@ function BatchImg() {
         setCustomizeSize(2);
         setCustomizeName(2);
         setMultiple([2, 3, 3, 4]);
+        setImageSize('');
+        setOriginalSize('');
     }
 
     function handleAlertClose() {
@@ -250,25 +274,31 @@ function BatchImg() {
             for (let j = 0; j < fileList.length; j++) {
                 src = fileList[j].resizeBase64Img[i].replace('data:image/png;base64,', '');
                 name = fileList[j].name;
-                switch (i) {
-                    case 0:
-                        const two = img.folder('2x');
-                        two.file(name, src, { base64: true });
-                        break;
-                    case 1:
-                        const three = img.folder('3x');
-                        three.file(name, src, { base64: true });
-                        break;
-                    case 2:
-                        const xxhdpi = img.folder('xxhdpi');
-                        xxhdpi.file(name, src, { base64: true });
-                        break;
-                    case 3:
-                        const xxxhdpi = img.folder('xxxhdpi');
-                        xxxhdpi.file(name, src, { base64: true });
-                        break;
-                    default:
-                        break;
+                if (customizeSize === 1) {
+                    img.folder(
+                        `${fileList[j].qrCodeSize[0] * multiple[i]} x ${fileList[j].qrCodeSize[1] * multiple[i]}`
+                    ).file(name, src, { base64: true });
+                } else {
+                    switch (i) {
+                        case 0:
+                            const two = img.folder('2x');
+                            two.file(name, src, { base64: true });
+                            break;
+                        case 1:
+                            const three = img.folder('3x');
+                            three.file(name, src, { base64: true });
+                            break;
+                        case 2:
+                            const xxhdpi = img.folder('xxhdpi');
+                            xxhdpi.file(name, src, { base64: true });
+                            break;
+                        case 3:
+                            const xxxhdpi = img.folder('xxxhdpi');
+                            xxxhdpi.file(name, src, { base64: true });
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -361,7 +391,7 @@ function BatchImg() {
                                     )} */}
                                 </CustomizeRoot>
                             </InputRoot>
-                            {/* <InputRoot>
+                            <InputRoot>
                                 <p>自定義尺寸</p>
                                 <CustomizeRoot>
                                     <Radio.Group
@@ -373,7 +403,7 @@ function BatchImg() {
                                     </Radio.Group>
                                     {customizeSize === 1 && (
                                         <Input
-                                            placeholder="請輸入原始圖片尺寸，請以 , 做長寬區隔"
+                                            placeholder="請輸入原始圖片寬度尺寸"
                                             style={{ resize: 'none', marginTop: '10px', width: '100%' }}
                                             value={originalSize}
                                             onChange={handleOriginalSize}
@@ -382,7 +412,7 @@ function BatchImg() {
                                     {customizeSize === 1 && (
                                         <Input.TextArea
                                             rows={3}
-                                            placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔，輸入完畢請按下'Enter'鍵"
+                                            placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔，範例: 64,128,256,512"
                                             style={{ resize: 'none', marginTop: '10px' }}
                                             value={imageSize}
                                             onChange={handleImageSize}
@@ -390,7 +420,7 @@ function BatchImg() {
                                         />
                                     )}
                                 </CustomizeRoot>
-                            </InputRoot> */}
+                            </InputRoot>
                             <InputRoot>
                                 <p>壓縮檔名稱</p>
                                 <Input
@@ -467,7 +497,7 @@ function BatchImg() {
                                                 </Row>
                                             </Col>
                                         ) : null}
-                                        {index2 === 0 && customizeSize === 1 ? (
+                                        {/* {index2 === 0 && customizeSize === 1 ? (
                                             <Col span={12}>
                                                 <Row align="middle">
                                                     <Col span={4}>
@@ -481,16 +511,23 @@ function BatchImg() {
                                                     </Col>
                                                 </Row>
                                             </Col>
-                                        ) : null}
+                                        ) : null} */}
                                         {index2 === 0 && <Col span={24} style={{ padding: 0 }}></Col>}
                                         <Col span={6}>
                                             <IconCard
                                                 id={index}
                                                 src={row2}
-                                                size={[
-                                                    Math.ceil((row.qrCodeSize[0] / 4) * multiple[index2]),
-                                                    Math.ceil((row.qrCodeSize[1] / 4) * multiple[index2]),
-                                                ]}
+                                                size={
+                                                    customizeSize === 1
+                                                        ? [
+                                                              Math.ceil(row.qrCodeSize[0] * multiple[index2]),
+                                                              Math.ceil(row.qrCodeSize[1] * multiple[index2]),
+                                                          ]
+                                                        : [
+                                                              Math.ceil((row.qrCodeSize[0] / 4) * multiple[index2]),
+                                                              Math.ceil((row.qrCodeSize[1] / 4) * multiple[index2]),
+                                                          ]
+                                                }
                                                 BatchImg
                                                 name={row.name}
                                                 multiple={multiple[index2]}
