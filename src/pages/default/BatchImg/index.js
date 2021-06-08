@@ -150,6 +150,7 @@ function BatchImg() {
         }
         if (value === 1 && block === 'size') {
             setFileList([]);
+            setImgAmount(0);
         }
     }
 
@@ -343,16 +344,19 @@ function BatchImg() {
                             <TitleRoot size={20} borderBottom>
                                 上傳圖片
                             </TitleRoot>
-                            <UploadRoot
-                                listType="picture-card"
-                                showUploadList={false}
-                                multiple={true}
-                                beforeUpload={beforeUpload}
-                                onChange={onChange}
-                                customRequest={dummyRequest}
-                            >
-                                {uploadButton}
-                            </UploadRoot>
+                            {(customizeSize === 2 || (imageSize !== '' && originalSize !== '')) && (
+                                <UploadRoot
+                                    listType="picture-card"
+                                    showUploadList={false}
+                                    multiple={true}
+                                    beforeUpload={beforeUpload}
+                                    onChange={onChange}
+                                    customRequest={dummyRequest}
+                                >
+                                    {uploadButton}
+                                </UploadRoot>
+                            )}
+
                             <RenderRow gutter={8}>
                                 {fileList &&
                                     fileList.map((row, index) => (
