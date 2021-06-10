@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { MyContext } from '@reducers';
 
-import { Form, Row, Col, Upload, message, Input, Button, Alert, Radio } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Alert, Radio, Checkbox } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
@@ -22,6 +22,7 @@ function ResizeIcon() {
     const [alertText, setAlertText] = useState('');
     const [resizeImg, setResizeImg] = useState(false);
     const [valueVersion, setValueVersion] = useState(1);
+    const [bothVersion, setBothVersion] = useState(false);
 
     const { setH1Title } = useContext(MyContext);
 
@@ -115,6 +116,11 @@ function ResizeIcon() {
         setValueVersion(e.target.value);
     }
 
+    function handleBothVersion() {
+        setValueVersion(1);
+        setBothVersion(!bothVersion);
+    }
+
     function handleSave() {
         const zip = new JSZip();
         let src = '';
@@ -124,10 +130,28 @@ function ResizeIcon() {
                 .getElementById(`resizeImg${i + 1}`)
                 .getAttribute('src')
                 .replace('data:image/png;base64,', '');
-            name = document.getElementById(`iconName${i + 1}`).textContent;
-            zip.file(name, src, { base64: true });
+            if (bothVersion) {
+                for (let j = 0; j < 2; j++) {
+                    if (j === 0) {
+                        name = document
+                            .getElementById(`iconName${i + 1}`)
+                            .textContent.replace('app_icon_', 'app_icon_effects_');
+                    } else {
+                        name = document.getElementById(`iconName${i + 1}`).textContent;
+                    }
+                    zip.file(name, src, { base64: true });
+                }
+            } else {
+                name = document.getElementById(`iconName${i + 1}`).textContent;
+                console.log('name', name);
+                zip.file(name, src, { base64: true });
+            }
         }
         zip.generateAsync({ type: 'blob' }).then(function (content) {
+            if (bothVersion) {
+                saveAs(content, `${webId}站點 標準版、娛樂版APP ICON`);
+                return;
+            }
             if (valueVersion === 1) {
                 saveAs(content, `${webId}站點 標準版APP ICON`);
             } else if (valueVersion === 2) {
@@ -189,10 +213,15 @@ function ResizeIcon() {
                             </InputRoot>
                             <InputRoot>
                                 <p>版本</p>
-                                <Radio.Group value={valueVersion} onChange={handleChangeVersion}>
-                                    <Radio value={1}>標準版</Radio>
-                                    <Radio value={2}>娛樂版</Radio>
-                                </Radio.Group>
+                                {!bothVersion && (
+                                    <Radio.Group value={valueVersion} onChange={handleChangeVersion}>
+                                        <Radio value={1}>標準版</Radio>
+                                        <Radio value={2}>娛樂版</Radio>
+                                    </Radio.Group>
+                                )}
+                                <Checkbox checked={bothVersion} onChange={handleBothVersion}>
+                                    兩者
+                                </Checkbox>
                             </InputRoot>
                         </Col>
                         <Col span={4} style={{ display: 'flex', flexDirection: 'column' }}>
