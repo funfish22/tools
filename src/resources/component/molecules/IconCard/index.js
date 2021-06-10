@@ -36,13 +36,16 @@ function IconCard(props) {
             </div>
             {changeName ? (
                 <>
-                    <p className="card_name" id={'iconName' + (id + 1)}>
+                    <p
+                        className={`${!BatchImg ? 'card_name' : 'card_name card_name--batch'}`}
+                        id={'iconName' + (id + 1)}
+                    >
                         {reName()}
                     </p>{' '}
                     <Input size="small" style={{ marginTop: '11.2px' }} onChange={onChangeName} />
                 </>
             ) : (
-                <p className="card_name" id={'iconName' + (id + 1)}>
+                <p className={`${!BatchImg ? 'card_name' : 'card_name card_name--batch'}`} id={'iconName' + (id + 1)}>
                     {reName()}
                 </p>
             )}
@@ -92,11 +95,13 @@ const IconCardRoot = styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        padding-right: 20px;
-        &:after {
-            position: absolute;
-            content: '倍';
-            right: 0;
+        &--batch {
+            padding-right: 20px;
+            &:after {
+                position: absolute;
+                content: '倍';
+                right: 0;
+            }
         }
     }
 `;
