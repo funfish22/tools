@@ -1,0 +1,2 @@
+(this.webpackJsonpapp_icon=this.webpackJsonpapp_icon||[]).push([[2],{648:function(n,t,e){"use strict";e.r(t);var i,o=e(42),c=e(43),s=e(9);t.default=function(){return Object(s.jsx)(a,{children:"Page Not Found"})};var a=c.b.div(i||(i=Object(o.a)(["\n    position: fixed;\n    background-color: #fff;\n    inset: 0px;\n    color: #38b2a9;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 30px;\n"])))}}]);
+//# sourceMappingURL=404.7d32d286e8aaa9be0f0b.js.map
