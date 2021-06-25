@@ -143,7 +143,6 @@ function ResizeIcon() {
                 }
             } else {
                 name = document.getElementById(`iconName${i + 1}`).textContent;
-                console.log('name', name);
                 zip.file(name, src, { base64: true });
             }
         }

@@ -4,7 +4,7 @@ import { MyContext } from '@reducers';
 
 import { getBase64 } from '@utils/image';
 
-import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert, Spin } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert, Spin, Carousel, Icon } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
@@ -14,6 +14,12 @@ import { saveAs } from 'file-saver';
 
 import Title from '@component/atoms/Title';
 import IconCard from '@component/molecules/IconCard';
+
+const settings = {
+    slidesToShow: 4,
+    autoplay: true,
+    arrows: true,
+};
 
 function BatchImg() {
     const [fileList, setFileList] = useState([]);
@@ -472,6 +478,76 @@ function BatchImg() {
                 <Row gutter={[16, 16]} ref={cardDom}>
                     {runSwitch &&
                         fileList.map((row, index) => {
+                            return (
+                                <React.Fragment key={index}>
+                                    <Col span={24}>
+                                        <Divider>{row.copyName}</Divider>
+                                    </Col>
+                                    {customizeName === 1 && (
+                                        <Col span={12}>
+                                            <Row align="middle">
+                                                <Col span={4}>
+                                                    <p style={{ marginBottom: 0 }}>自定義名稱</p>
+                                                </Col>
+                                                <Col span={20}>
+                                                    <Input
+                                                        placeholder="輸入完成請按下'Enter'鍵"
+                                                        onKeyPress={(e) => handleChangeName(e, row.base64Img)}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    )}
+                                    <Col span={24}>
+                                        <Row gutter={[16, 16]}>
+                                            <Col span={24}>
+                                                <CardCarousel {...settings}>
+                                                    {row.resizeBase64Img &&
+                                                        row.resizeBase64Img.map((row2, index2) => {
+                                                            return (
+                                                                <Col span={24} key={index2}>
+                                                                    <IconCard
+                                                                        id={index}
+                                                                        src={row2}
+                                                                        size={
+                                                                            customizeSize === 1
+                                                                                ? [
+                                                                                      Math.ceil(
+                                                                                          row.qrCodeSize[0] *
+                                                                                              multiple[index2]
+                                                                                      ),
+                                                                                      Math.ceil(
+                                                                                          row.qrCodeSize[1] *
+                                                                                              multiple[index2]
+                                                                                      ),
+                                                                                  ]
+                                                                                : [
+                                                                                      Math.ceil(
+                                                                                          (row.qrCodeSize[0] / 4) *
+                                                                                              multiple[index2]
+                                                                                      ),
+                                                                                      Math.ceil(
+                                                                                          (row.qrCodeSize[1] / 4) *
+                                                                                              multiple[index2]
+                                                                                      ),
+                                                                                  ]
+                                                                        }
+                                                                        BatchImg
+                                                                        name={row.name}
+                                                                        multiple={multiple[index2]}
+                                                                    />
+                                                                </Col>
+                                                            );
+                                                        })}
+                                                </CardCarousel>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </React.Fragment>
+                            );
+                        })}
+                    {/* {runSwitch &&
+                        fileList.map((row, index) => {
                             return row.resizeBase64Img.map((row2, index2) => {
                                 return (
                                     <React.Fragment key={row.name + index2}>
@@ -495,21 +571,6 @@ function BatchImg() {
                                                 </Row>
                                             </Col>
                                         ) : null}
-                                        {/* {index2 === 0 && customizeSize === 1 ? (
-                                            <Col span={12}>
-                                                <Row align="middle">
-                                                    <Col span={4}>
-                                                        <p style={{ marginBottom: 0 }}>自定義尺寸</p>
-                                                    </Col>
-                                                    <Col span={20}>
-                                                        <Input
-                                                            placeholder="輸入完成請按下'Enter'鍵"
-                                                            onKeyPress={(e) => handleChangeName(e, row.base64Img)}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                        ) : null} */}
                                         {index2 === 0 && <Col span={24} style={{ padding: 0 }}></Col>}
                                         <Col span={6}>
                                             <IconCard
@@ -534,7 +595,7 @@ function BatchImg() {
                                     </React.Fragment>
                                 );
                             });
-                        })}
+                        })} */}
                 </Row>
             </BatchImgBody>
         </BatchImgRoot>
@@ -670,5 +731,20 @@ const RenderCard = styled.div`
     img {
         max-width: 100%;
         height: auto;
+    }
+`;
+
+const CardCarousel = styled(Carousel)`
+    margin: 0 -8px;
+    .slick-arrow {
+        background: #ccc;
+        &:before {
+            color: #fff;
+            font-size: 12px;
+        }
+        &:hover,
+        &:active {
+            background: #666;
+        }
     }
 `;
