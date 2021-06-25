@@ -413,7 +413,7 @@ function BatchImg() {
                                             onChange={handleOriginalSize}
                                         />
                                     )}
-                                    {customizeSize === 1 && (
+                                    {customizeSize === 1 && originalSize !== '' && (
                                         <Input.TextArea
                                             rows={3}
                                             placeholder="多尺寸，輸入寬度即可，程式會自動計算高度，請以 , 做區隔，範例: 64,128,256,512"
