@@ -477,6 +477,7 @@ function BatchImg() {
             <BatchImgBody>
                 <Row gutter={[16, 16]} ref={cardDom}>
                     {runSwitch &&
+                        multiple.length >= 4 &&
                         fileList.map((row, index) => {
                             return (
                                 <React.Fragment key={index}>
@@ -546,7 +547,8 @@ function BatchImg() {
                                 </React.Fragment>
                             );
                         })}
-                    {/* {runSwitch &&
+                    {runSwitch &&
+                        multiple.length < 4 &&
                         fileList.map((row, index) => {
                             return row.resizeBase64Img.map((row2, index2) => {
                                 return (
@@ -595,7 +597,7 @@ function BatchImg() {
                                     </React.Fragment>
                                 );
                             });
-                        })} */}
+                        })}
                 </Row>
             </BatchImgBody>
         </BatchImgRoot>
