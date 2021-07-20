@@ -2,38 +2,20 @@ import { Card } from 'antd';
 import styled, { css } from 'styled-components';
 
 import { Link } from 'react-router-dom';
-
-const CardArray = [
-    {
-        title: 'APP ICON 圖片尺寸調整工具',
-        bgColor: '#02E5C9',
-        color: '#000',
-        link: '/resizeIcon',
-    },
-    {
-        title: 'QR CODE 自動爬蟲工具',
-        bgColor: '#05baff',
-        color: '#000',
-        link: '/qrCode',
-    },
-    {
-        title: '遊戲圖標批次產圖工具',
-        bgColor: '#b7eb8f',
-        color: '#000',
-        link: '/batchImg',
-    },
-];
+import { routes } from '@route';
 
 function CardRoot() {
     return (
         <CardBlock title="工具">
-            {CardArray.map((row, index) => (
-                <CardLink to={row.link} key={index}>
-                    <CardStyle bgcolor={row.bgColor} color={row.color}>
-                        {row.title}
-                    </CardStyle>
-                </CardLink>
-            ))}
+            {routes.map((row, index) =>
+                row.path !== '/' && row.path !== '*' ? (
+                    <CardLink to={row.path} key={index}>
+                        <CardStyle bgcolor={row.bgColor} color={row.color}>
+                            {row.name}
+                        </CardStyle>
+                    </CardLink>
+                ) : null
+            )}
         </CardBlock>
     );
 }

@@ -14,6 +14,8 @@ export const routes = [
             import(/*webpackChunkName:"ResizeIcon"*/ /*webpackMode:"lazy"*/ '@page/default/ResizeIcon')
         ),
         exact: true,
+        bgColor: '#02E5C9',
+        color: '#000',
     },
     {
         name: 'QR code 自動爬蟲工具',
@@ -22,6 +24,8 @@ export const routes = [
             import(/*webpackChunkName:"QRCode"*/ /*webpackMode:"lazy"*/ '@page/default/QRCode')
         ),
         exact: true,
+        bgColor: '#05baff',
+        color: '#000',
     },
     {
         name: '遊戲圖片批次產圖工具',
@@ -30,6 +34,8 @@ export const routes = [
             import(/*webpackChunkName:"BatchImg"*/ /*webpackMode:"lazy"*/ '@page/default/BatchImg')
         ),
         exact: true,
+        bgColor: '#b7eb8f',
+        color: '#000',
     },
     {
         name: 'Page Not Found',
