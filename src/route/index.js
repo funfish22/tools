@@ -6,6 +6,7 @@ export const routes = [
         path: '/',
         component: React.lazy(() => import(/*webpackChunkName:"Home"*/ /*webpackMode:"lazy"*/ '@page/default/Home')),
         exact: true,
+        tags: '',
     },
     {
         name: 'APP ICON 圖片尺寸調整工具',
@@ -16,6 +17,7 @@ export const routes = [
         exact: true,
         bgColor: '#02E5C9',
         color: '#000',
+        tags: 'tool',
     },
     {
         name: 'QR code 自動爬蟲工具',
@@ -26,6 +28,7 @@ export const routes = [
         exact: true,
         bgColor: '#05baff',
         color: '#000',
+        tags: 'tool',
     },
     {
         name: '遊戲圖片批次產圖工具',
@@ -36,6 +39,18 @@ export const routes = [
         exact: true,
         bgColor: '#b7eb8f',
         color: '#000',
+        tags: 'tool',
+    },
+    {
+        name: '前端公告',
+        path: '/announcementF2E',
+        component: React.lazy(() =>
+            import(/*webpackChunkName:"AnnouncementF2E"*/ /*webpackMode:"lazy"*/ '@page/default/AnnouncementF2E')
+        ),
+        exact: true,
+        bgColor: '#b7eb8f',
+        color: '#000',
+        tags: 'announcement',
     },
     {
         name: 'Page Not Found',
@@ -43,5 +58,6 @@ export const routes = [
         component: React.lazy(() =>
             import(/*webpackChunkName:"404"*/ /*webpackMode:"lazy"*/ '@page/default/PageNotFound')
         ),
+        tags: '',
     },
 ];

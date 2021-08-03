@@ -6,17 +6,32 @@ import { routes } from '@route';
 
 function CardRoot() {
     return (
-        <CardBlock title="工具">
-            {routes.map((row, index) =>
-                row.path !== '/' && row.path !== '*' ? (
-                    <CardLink to={row.path} key={index}>
-                        <CardStyle bgcolor={row.bgColor} color={row.color}>
-                            {row.name}
-                        </CardStyle>
-                    </CardLink>
-                ) : null
-            )}
-        </CardBlock>
+        <>
+            <CardBlock title="工具">
+                {routes.map(
+                    (row, index) =>
+                        row.tags === 'tool' && (
+                            <CardLink to={row.path} key={index}>
+                                <CardStyle bgcolor={row.bgColor} color={row.color}>
+                                    {row.name}
+                                </CardStyle>
+                            </CardLink>
+                        )
+                )}
+            </CardBlock>
+            <CardBlock title="公告">
+                {routes.map(
+                    (row, index) =>
+                        row.tags === 'announcement' && (
+                            <CardLink to={row.path} key={index}>
+                                <CardStyle bgcolor={row.bgColor} color={row.color}>
+                                    {row.name}
+                                </CardStyle>
+                            </CardLink>
+                        )
+                )}
+            </CardBlock>
+        </>
     );
 }
 
@@ -24,6 +39,7 @@ export default CardRoot;
 
 const CardBlock = styled(Card)`
     border: none;
+    margin-bottom: 40px;
     .ant-card-head-title {
         font-weight: bold;
     }
