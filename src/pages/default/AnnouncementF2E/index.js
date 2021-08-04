@@ -2,13 +2,16 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { MyContext } from '@reducers';
 
 import { Button, Modal, Form, Input } from 'antd';
+import ReactQuill, { Quill, Mixin, Toolbar } from 'react-quill';
 import firebase from 'firebase';
 
 import styled from 'styled-components';
+import 'react-quill/dist/quill.snow.css';
 
 function AnnouncementF2E() {
     const [announcementLists, setAnnouncementLists] = useState([]);
     const [addAnnouncementModalVisible, setAddAnnouncementModalVisible] = useState(false);
+    const [announcementContent, setAnnouncementContent] = useState('');
 
     const { setH1Title, loginStatus } = useContext(MyContext);
 
@@ -64,6 +67,18 @@ function AnnouncementF2E() {
         setAddAnnouncementModalVisible(false);
     };
 
+    const handleChange = (value) => {
+        setAnnouncementContent(value);
+    };
+
+    const checkPrice = () => {
+        if (announcementContent !== '') {
+            console.log('announcementContent', announcementContent);
+            return Promise.resolve();
+        }
+        return Promise.reject(new Error('Price must be greater than zero!'));
+    };
+
     return (
         <AnnouncementF2ERoot>
             <AddAnnouncement>
@@ -104,12 +119,12 @@ function AnnouncementF2E() {
                     ref={formRef}
                 >
                     <Form.Item
-                        label="名稱"
+                        label="標題"
                         name="title"
                         rules={[
                             {
                                 required: true,
-                                message: '請輸入名稱!',
+                                message: '請輸入標題!',
                             },
                         ]}
                     >
@@ -121,11 +136,11 @@ function AnnouncementF2E() {
                         rules={[
                             {
                                 required: true,
-                                message: '請輸入內容!',
+                                validator: checkPrice,
                             },
                         ]}
                     >
-                        <Input />
+                        <ReactQuill value={announcementContent} onChange={handleChange} />
                     </Form.Item>
                 </Form>
             </Modal>
