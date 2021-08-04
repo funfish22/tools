@@ -14,9 +14,10 @@ import Footer from '@component/organisms/Footer';
 
 function App() {
     const [h1Title, setH1Title] = useState();
+    const [loginStatus, setLoginStatus] = useState(false);
 
     return (
-        <MyContext.Provider value={{ h1Title, setH1Title }}>
+        <MyContext.Provider value={{ h1Title, setH1Title, loginStatus, setLoginStatus }}>
             <HashRouter>
                 <Flex>
                     <Header />
