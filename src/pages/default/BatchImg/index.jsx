@@ -4,7 +4,7 @@ import { MyContext } from '@reducers';
 
 import { getBase64 } from '@utils/image';
 
-import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert, Spin, Carousel, Icon } from 'antd';
+import { Form, Row, Col, Upload, message, Input, Button, Radio, Divider, Alert, Spin, Carousel } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
