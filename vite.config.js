@@ -6,6 +6,7 @@ export default defineConfig({
     build: {
         outDir: 'build',
     },
+    base: '/tools/',
     resolve: {
         alias: {
             '@apis': path.resolve(__dirname, './src/services/api'),
