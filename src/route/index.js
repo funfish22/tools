@@ -54,6 +54,18 @@ export const routes = [
         login: false,
     },
     {
+        name: '翻譯搜尋',
+        path: '/translationSearch',
+        component: React.lazy(() =>
+            import(/*webpackChunkName:"TranslationSearch"*/ /*webpackMode:"lazy"*/ '@page/default/TranslationSearch')
+        ),
+        exact: true,
+        bgColor: '#05baff',
+        color: '#000',
+        tags: 'announcement',
+        login: false,
+    },
+    {
         name: 'Page Not Found',
         path: '*',
         component: React.lazy(() =>
