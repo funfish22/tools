@@ -1,26 +1,51 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { MyContext } from '@reducers';
 
-import { Button, Modal, Form, Input } from 'antd';
+import { Button, Modal, Form, Input, Table } from 'antd';
 import ReactQuill, { Quill, Mixin, Toolbar } from 'react-quill';
 import firebase from 'firebase';
 
 import styled from 'styled-components';
 import 'react-quill/dist/quill.snow.css';
 
+const columns = [
+    {
+        title: '標題',
+        dataIndex: 'title',
+        content: 'title',
+    },
+    {
+        title: '時間',
+        dataIndex: 'time',
+        key: 'time',
+    },
+    {
+        title: '內容',
+        dataIndex: 'content',
+        key: 'content',
+        render: (text) => <div dangerouslySetInnerHTML={{ __html: text }} />,
+    },
+    {
+        title: '編輯',
+        dataIndex: '',
+        key: 'x',
+        render: () => <Button type="primary">編輯</Button>,
+    },
+];
+
 function AnnouncementF2E() {
     const [announcementLists, setAnnouncementLists] = useState([]);
     const [addAnnouncementModalVisible, setAddAnnouncementModalVisible] = useState(false);
-    const [announcementContent, setAnnouncementContent] = useState('');
+    const [announcementContent, setAnnouncementContent] = useState('<p>123</p>');
 
     const { setH1Title, loginStatus } = useContext(MyContext);
 
     const formRef = useRef();
+    const editor = useRef();
 
     const db = firebase.firestore();
     useEffect(() => {
         setH1Title('前端公告');
-
         readAnnouncement();
     }, [loginStatus, setH1Title, db]);
 
@@ -38,7 +63,8 @@ function AnnouncementF2E() {
                         id: doc.id,
                     };
                 });
-                setAnnouncementLists(documents);
+                const newDocuments = documents.sort((a, b) => b.time - a.time);
+                setAnnouncementLists(newDocuments);
             })
             .catch();
     };
@@ -65,6 +91,9 @@ function AnnouncementF2E() {
 
     const handleCancel = () => {
         setAddAnnouncementModalVisible(false);
+        console.log('editor');
+        console.log('editor.current', editor.current);
+        editor.current.destroy();
     };
 
     const handleChange = (value) => {
@@ -88,16 +117,8 @@ function AnnouncementF2E() {
                     </Button>
                 )}
             </AddAnnouncement>
-            <ul>
-                {!!announcementLists &&
-                    announcementLists
-                        .sort((a, b) => b.time - a.time)
-                        .map((row) => (
-                            <li key={row.time}>
-                                {row.title} {row.content}
-                            </li>
-                        ))}
-            </ul>
+            {/* <ul>{!!announcementLists && announcementLists.sort((a, b) => b.time - a.time).map((row) => <Table />)}</ul> */}
+            {!!announcementLists && <Table dataSource={announcementLists} columns={columns} />}
             <Modal
                 title="新增公告"
                 visible={addAnnouncementModalVisible}
@@ -133,17 +154,17 @@ function AnnouncementF2E() {
                     <Form.Item
                         label="內容"
                         name="content"
+                        initialValue={announcementContent}
                         rules={[
                             {
                                 required: true,
                                 validator: checkPrice,
                             },
                         ]}
-                    >
-                        <ReactQuill value={announcementContent} onChange={handleChange} />
-                    </Form.Item>
+                    ></Form.Item>
                 </Form>
             </Modal>
+            <ReactQuill ref={editor} value={announcementContent} onChange={handleChange} />
         </AnnouncementF2ERoot>
     );
 }

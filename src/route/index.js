@@ -51,6 +51,7 @@ export const routes = [
         bgColor: '#b7eb8f',
         color: '#000',
         tags: 'announcement',
+        login: false,
     },
     {
         name: 'Page Not Found',

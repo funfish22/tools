@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { MyContext } from '@reducers';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { routes } from '@route';
@@ -7,19 +8,25 @@ import styled from 'styled-components';
 
 function SideMenu(props) {
     const { menuSwitch, handleCloseMenu } = props;
+    const { loginStatus } = useContext(MyContext);
+
+    const renderMenu = () => {
+        const render = routes.map((row, index) => {
+            return row.path !== '*' && row.login !== loginStatus ? (
+                <Menu.Item key={index}>
+                    <Link to={row.path} onClick={handleCloseMenu}>
+                        {row.name}
+                    </Link>
+                </Menu.Item>
+            ) : null;
+        });
+        return render;
+    };
 
     return (
         <SideMenuRoot className={menuSwitch ? 'SideMenuActive' : ''}>
             <Menu selectable={false} theme="dark">
-                {routes.map((row, index) => {
-                    return row.path !== '*' ? (
-                        <Menu.Item key={index}>
-                            <Link to={row.path} onClick={handleCloseMenu}>
-                                {row.name}
-                            </Link>
-                        </Menu.Item>
-                    ) : null;
-                })}
+                {renderMenu()}
             </Menu>
         </SideMenuRoot>
     );

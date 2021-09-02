@@ -16,7 +16,7 @@ function Header(props) {
 
     const { h1Title, loginStatus, setLoginStatus } = useContext(MyContext);
     const [menuSwitch, setMenuSwitch] = useState(false);
-    const [showLogin, setShowLogin] = useState(false);
+    const [showLogin, setShowLogin] = useState(true);
     const [loginModalVisible, setLoginModalVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [alert, setAlert] = useState(false);
@@ -82,9 +82,9 @@ function Header(props) {
         setAlert(false);
     };
 
-    useEffect(() => {
-        location.pathname === '/announcementF2E' ? setShowLogin(true) : setShowLogin(false);
-    }, [location]);
+    // useEffect(() => {
+    //     location.pathname === '/announcementF2E' ? setShowLogin(true) : setShowLogin(false);
+    // }, [location]);
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user) => {
