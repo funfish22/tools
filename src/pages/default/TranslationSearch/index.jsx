@@ -32,7 +32,6 @@ function TranslationSearch() {
 
     useEffect(() => {
         setH1Title('翻譯搜尋');
-        console.log('loginStatus', loginStatus);
         if (!loginStatus) history.push('/');
     });
 
