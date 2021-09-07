@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { MyContext } from '@reducers';
 
 import { Button, Modal, Form, Input, Table } from 'antd';
@@ -34,6 +35,8 @@ const columns = [
 ];
 
 function AnnouncementF2E() {
+    const history = useHistory();
+
     const [announcementLists, setAnnouncementLists] = useState([]);
     const [addAnnouncementModalVisible, setAddAnnouncementModalVisible] = useState(false);
     const [announcementContent, setAnnouncementContent] = useState('<p>123</p>');
@@ -47,6 +50,7 @@ function AnnouncementF2E() {
     useEffect(() => {
         setH1Title('前端公告');
         readAnnouncement();
+        if (!loginStatus) history.push('/');
     }, [loginStatus, setH1Title, db]);
 
     const handleAddAnnouncementModalVisible = () => {

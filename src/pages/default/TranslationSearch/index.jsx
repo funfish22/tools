@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { MyContext } from '@reducers';
 
 import { Form, Row, Col, Button, Input, List, Card, Divider, Alert, Spin } from 'antd';
@@ -20,15 +21,19 @@ const TitleData = [
 ];
 
 function TranslationSearch() {
+    const history = useHistory();
+
     const [translationText, setTranslationText] = useState('');
     const [translationList, setTranslationList] = useState([]);
     const [copySuccess, setCopySuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const { setH1Title } = useContext(MyContext);
+    const { setH1Title, loginStatus } = useContext(MyContext);
 
     useEffect(() => {
         setH1Title('翻譯搜尋');
+        console.log('loginStatus', loginStatus);
+        if (!loginStatus) history.push('/');
     });
 
     function handleTranslationText(e) {
