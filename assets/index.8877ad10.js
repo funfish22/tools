@@ -1,4 +1,4 @@
-import{R as e,s as t}from"./vendor.8af50039.js";function n(){return e.createElement(o,null,"Page Not Found")}const o=t.div`
+import{R as e,s as t}from"./vendor.37af8e5e.js";function n(){return e.createElement(o,null,"Page Not Found")}const o=t.div`
     position: fixed;
     background-color: #fff;
     inset: 0px;
