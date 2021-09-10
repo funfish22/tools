@@ -10,14 +10,14 @@ import Title from '@component/atoms/Title';
 import { translationSearchQuery } from '@apis/TranslationSearch';
 
 const TitleData = [
-    { title: '簡體中文' },
-    { title: '英文' },
-    { title: '越南文' },
-    { title: '韓文' },
-    { title: '泰文' },
-    { title: '印尼文' },
-    { title: '印地文' },
-    { title: '日文' },
+    { title: '簡體中文 zh-CN' },
+    { title: '英文 en-US' },
+    { title: '越南文 vi-VN' },
+    { title: '韓文 ko-KR' },
+    { title: '泰文 th-TH' },
+    { title: '印尼文 in-ID' },
+    { title: '印地文 hi-IN' },
+    { title: '日文 ja-JP' },
 ];
 
 function TranslationSearch() {
