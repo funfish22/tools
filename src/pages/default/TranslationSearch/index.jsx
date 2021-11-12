@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MyContext } from '@reducers';
 
-import { Form, Row, Col, Button, Input, List, Card, Divider, Alert, Spin } from 'antd';
+import { Form, Row, Col, Button, Input, List, Card, Divider, Alert, Spin, Checkbox } from 'antd';
 import styled from 'styled-components';
 
 import Title from '@component/atoms/Title';
@@ -25,6 +25,8 @@ function TranslationSearch() {
 
     const [translationText, setTranslationText] = useState('');
     const [translationList, setTranslationList] = useState([]);
+    const [conversion, setConversion] = useState('true');
+    const [match, setMatch] = useState('false');
     const [copySuccess, setCopySuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -42,7 +44,7 @@ function TranslationSearch() {
     async function handleTranslationSearch() {
         setLoading(true);
         setTranslationList([]);
-        const translationSearchArray = await translationSearchQuery(translationText);
+        const translationSearchArray = await translationSearchQuery(translationText, conversion, match);
         if (translationSearchArray.status === 200) {
             setLoading(false);
             setTranslationList(translationSearchArray.data);
@@ -56,6 +58,14 @@ function TranslationSearch() {
                 setCopySuccess(false);
             }, 2000);
         });
+    }
+
+    function handleChangeConversion(e) {
+        setConversion(e.target.checked.toString());
+    }
+
+    function handleChangeMatch(e) {
+        setMatch(e.target.checked.toString());
     }
 
     return (
@@ -83,7 +93,14 @@ function TranslationSearch() {
                                 />
                             </InputRoot>
                         </Col>
-                        <Col span={10} />
+                        <Col span={10}>
+                            <TitleRoot size={20} borderBottom>
+                                篩選功能(未完成)
+                            </TitleRoot>
+                            <Checkbox onChange={handleChangeConversion}>大小寫需相符</Checkbox>
+                            <br />
+                            <Checkbox onChange={handleChangeMatch}>內容需相符</Checkbox>
+                        </Col>
                         <Col span={4}>
                             <TitleRoot size={20} borderBottom>
                                 功能
