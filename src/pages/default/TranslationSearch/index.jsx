@@ -25,8 +25,8 @@ function TranslationSearch() {
 
     const [translationText, setTranslationText] = useState('');
     const [translationList, setTranslationList] = useState([]);
-    const [conversion, setConversion] = useState('true');
-    const [match, setMatch] = useState('false');
+    const [conversion, setConversion] = useState('');
+    const [match, setMatch] = useState('');
     const [copySuccess, setCopySuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -45,6 +45,7 @@ function TranslationSearch() {
         setLoading(true);
         setTranslationList([]);
         const translationSearchArray = await translationSearchQuery(translationText, conversion, match);
+        console.log('match', match);
         if (translationSearchArray.status === 200) {
             setLoading(false);
             setTranslationList(translationSearchArray.data);
@@ -61,11 +62,13 @@ function TranslationSearch() {
     }
 
     function handleChangeConversion(e) {
-        setConversion(e.target.checked.toString());
+        if (e.target.checked) setConversion('conversion');
+        else setConversion('');
     }
 
     function handleChangeMatch(e) {
-        setMatch(e.target.checked.toString());
+        if (e.target.checked) setMatch('match');
+        else setMatch('');
     }
 
     return (
@@ -95,7 +98,7 @@ function TranslationSearch() {
                         </Col>
                         <Col span={10}>
                             <TitleRoot size={20} borderBottom>
-                                篩選功能(未完成)
+                                篩選功能
                             </TitleRoot>
                             <Checkbox onChange={handleChangeConversion}>大小寫需相符</Checkbox>
                             <br />
