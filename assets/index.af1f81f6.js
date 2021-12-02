@@ -1,4 +1,4 @@
-import{R as e,s as t}from"./vendor.37af8e5e.js";function n(){return e.createElement(o,null,"Page Not Found")}const o=t.div`
+import{C as e,R as o,s as t}from"./vendor.37af8e5e.js";var n=e.exports.memo((function(){return o.createElement(r,null,"Page Not Found")}));const r=t.div`
     position: fixed;
     background-color: #fff;
     inset: 0px;
