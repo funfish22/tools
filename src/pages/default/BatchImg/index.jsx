@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, memo } from 'react';
 
 import { MyContext } from '@reducers';
 
@@ -604,7 +604,7 @@ function BatchImg() {
     );
 }
 
-export default BatchImg;
+export default memo(BatchImg);
 
 const BatchImgRoot = styled.main``;
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, memo } from 'react';
 
 import { MyContext } from '@reducers';
 
@@ -282,7 +282,7 @@ function ResizeIcon() {
     );
 }
 
-export default ResizeIcon;
+export default memo(ResizeIcon);
 
 const ResizeIconRoot = styled.main``;
 

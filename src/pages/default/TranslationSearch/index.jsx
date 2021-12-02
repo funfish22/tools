@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, memo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MyContext } from '@reducers';
 
@@ -154,7 +154,7 @@ function TranslationSearch() {
     );
 }
 
-export default TranslationSearch;
+export default memo(TranslationSearch);
 
 const TranslationSearchRoot = styled.main``;
 

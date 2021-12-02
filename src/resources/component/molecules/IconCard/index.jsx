@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 
 import { Input } from 'antd';
@@ -53,7 +53,7 @@ function IconCard(props) {
     );
 }
 
-export default IconCard;
+export default memo(IconCard);
 
 const IconCardRoot = styled.div`
     text-align: center;

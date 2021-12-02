@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, memo } from 'react';
 import { MyContext } from '@reducers';
 
 import Card from '@component/molecules/Card';
@@ -19,7 +19,7 @@ function Home() {
     );
 }
 
-export default Home;
+export default memo(Home);
 
 const Container = styled.div`
     width: 1140px;

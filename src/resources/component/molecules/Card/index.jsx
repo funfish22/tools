@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, memo } from 'react';
 import { MyContext } from '@reducers';
 import { Card } from 'antd';
 import styled, { css } from 'styled-components';
@@ -41,7 +41,7 @@ function CardRoot() {
     );
 }
 
-export default CardRoot;
+export default memo(CardRoot);
 
 const CardBlock = styled(Card)`
     border: none;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Layout } from 'antd';
 
 import styled from 'styled-components';
@@ -13,7 +13,7 @@ function Footer() {
     );
 }
 
-export default Footer;
+export default memo(Footer);
 
 const Title = styled.div`
     text-align: center;

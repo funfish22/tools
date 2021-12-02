@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled, { css } from 'styled-components';
 
 function Title(props) {
@@ -11,7 +11,7 @@ function Title(props) {
     );
 }
 
-export default Title;
+export default memo(Title);
 
 const TitleRoot = styled.div`
     font-size: ${(props) => props.size}px;

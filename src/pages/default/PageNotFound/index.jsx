@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 
 function PageNotFound() {
     return <PageNotFoundRoot>Page Not Found</PageNotFoundRoot>;
 }
 
-export default PageNotFound;
+export default memo(PageNotFound);
 
 const PageNotFoundRoot = styled.div`
     position: fixed;

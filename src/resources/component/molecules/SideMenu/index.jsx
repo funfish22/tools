@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, memo } from 'react';
 import { MyContext } from '@reducers';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ function SideMenu(props) {
     );
 }
 
-export default SideMenu;
+export default memo(SideMenu);
 
 const SideMenuRoot = styled.nav`
     width: 200px;

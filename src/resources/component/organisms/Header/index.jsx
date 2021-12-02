@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import firebase from 'firebase';
 
@@ -171,7 +171,7 @@ function Header(props) {
     );
 }
 
-export default Header;
+export default memo(Header);
 
 const Title = styled.h1`
     text-align: center;

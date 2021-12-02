@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, memo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { Spin } from 'antd';
@@ -23,7 +23,7 @@ function Router() {
     );
 }
 
-export default Router;
+export default memo(Router);
 
 const SpinRoot = styled.div`
     position: fixed;

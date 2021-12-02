@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, memo } from 'react';
 
 import { MyContext } from '@reducers';
 
@@ -172,7 +172,7 @@ function QRcode() {
     );
 }
 
-export default QRcode;
+export default memo(QRcode);
 
 const QRcodeRoot = styled.main``;
 

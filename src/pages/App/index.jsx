@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { HashRouter, BrowserRouter } from 'react-router-dom';
 import Router from './Router';
 
@@ -33,7 +33,7 @@ function App() {
     );
 }
 
-export default App;
+export default memo(App);
 
 const Flex = styled.div`
     display: flex;
