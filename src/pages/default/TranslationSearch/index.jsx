@@ -12,17 +12,15 @@ import { translationSearchQuery } from '@apis/TranslationSearch';
 const CheckboxGroup = Checkbox.Group;
 
 const TitleData = [
-    { title: '簡體中文 zh-CN' },
-    { title: '英文 en-US' },
-    { title: '越南文 vi-VN' },
-    { title: '韓文 ko-KR' },
-    { title: '泰文 th-TH' },
-    { title: '印尼文 in-ID' },
-    { title: '印地文 hi-IN' },
-    { title: '日文 ja-JP' },
+    '簡體中文 zh-CN',
+    '英文 en-US',
+    '越南文 vi-VN',
+    '韓文 ko-KR',
+    '泰文 th-TH',
+    '印尼文 in-ID',
+    '印地文 hi-IN',
+    '日文 ja-JP',
 ];
-
-const TitleDataOptions = TitleData.map((row) => row.title);
 
 function TranslationSearch() {
     const history = useHistory();
@@ -35,7 +33,7 @@ function TranslationSearch() {
     const [loading, setLoading] = useState(false);
     const [indeterminate, setIndeterminate] = useState(true);
     const [checkAll, setCheckAll] = useState(false);
-    const [checkedList, setCheckedList] = useState(TitleDataOptions);
+    const [checkedList, setCheckedList] = useState(TitleData);
 
     const { setH1Title, loginStatus } = useContext(MyContext);
 
@@ -79,15 +77,15 @@ function TranslationSearch() {
     }
 
     function onCheckAllChange(e) {
-        setCheckedList(e.target.checked ? TitleDataOptions : []);
+        setCheckedList(e.target.checked ? TitleData : []);
         setIndeterminate(false);
         setCheckAll(e.target.checked);
     }
 
     function onChange(list) {
         setCheckedList(list);
-        setIndeterminate(!!list.length && list.length < TitleDataOptions.length);
-        setCheckAll(list.length === TitleDataOptions.length);
+        setIndeterminate(!!list.length && list.length < TitleData.length);
+        setCheckAll(list.length === TitleData.length);
     }
 
     return (
@@ -139,7 +137,7 @@ function TranslationSearch() {
                                 </Col>
                                 <CheckboxGroup onChange={onChange} value={checkedList}>
                                     <Row>
-                                        {TitleDataOptions.map((row, index) => {
+                                        {TitleData.map((row, index) => {
                                             return (
                                                 <Col span={12} key={index}>
                                                     <Checkbox value={row}>{row}</Checkbox>
@@ -169,12 +167,12 @@ function TranslationSearch() {
                                 <Divider orientation="left">{row.data[1]}</Divider>
                                 <List
                                     grid={{ gutter: 16, column: 3 }}
-                                    dataSource={TitleData}
+                                    dataSource={checkedList}
                                     renderItem={(item, index) => {
-                                        return checkedList.includes(item.title) ? (
+                                        return checkedList.includes(item) ? (
                                             <List.Item>
                                                 <Card
-                                                    title={item.title}
+                                                    title={item}
                                                     extra={
                                                         <Button
                                                             type="primary"
