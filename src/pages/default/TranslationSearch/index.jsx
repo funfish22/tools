@@ -171,7 +171,7 @@ function TranslationSearch() {
                                     grid={{ gutter: 16, column: 3 }}
                                     dataSource={TitleData}
                                     renderItem={(item, index) => {
-                                        return (
+                                        return checkedList.includes(item.title) ? (
                                             <List.Item>
                                                 <Card
                                                     title={item.title}
@@ -189,6 +189,8 @@ function TranslationSearch() {
                                                     {row.data[index + 1]}
                                                 </Card>
                                             </List.Item>
+                                        ) : (
+                                            <></>
                                         );
                                     }}
                                 />
