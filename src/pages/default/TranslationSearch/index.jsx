@@ -9,6 +9,8 @@ import Title from '@component/atoms/Title';
 
 import { translationSearchQuery } from '@apis/TranslationSearch';
 
+const CheckboxGroup = Checkbox.Group;
+
 const TitleData = [
     { title: '簡體中文 zh-CN' },
     { title: '英文 en-US' },
@@ -20,6 +22,8 @@ const TitleData = [
     { title: '日文 ja-JP' },
 ];
 
+const TitleDataOptions = TitleData.map((row) => row.title);
+
 function TranslationSearch() {
     const history = useHistory();
 
@@ -29,6 +33,9 @@ function TranslationSearch() {
     const [match, setMatch] = useState('');
     const [copySuccess, setCopySuccess] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [indeterminate, setIndeterminate] = useState(true);
+    const [checkAll, setCheckAll] = useState(false);
+    const [checkedList, setCheckedList] = useState(TitleDataOptions);
 
     const { setH1Title, loginStatus } = useContext(MyContext);
 
@@ -71,6 +78,18 @@ function TranslationSearch() {
         else setMatch('');
     }
 
+    function onCheckAllChange(e) {
+        setCheckedList(e.target.checked ? TitleDataOptions : []);
+        setIndeterminate(false);
+        setCheckAll(e.target.checked);
+    }
+
+    function onChange(list) {
+        setCheckedList(list);
+        setIndeterminate(!!list.length && list.length < TitleDataOptions.length);
+        setCheckAll(list.length === TitleDataOptions.length);
+    }
+
     return (
         <TranslationSearchRoot>
             {loading && (
@@ -82,7 +101,7 @@ function TranslationSearch() {
             <TranslationSearchHeader>
                 <Form>
                     <Row gutter={32}>
-                        <Col span={10}>
+                        <Col span={8}>
                             <TitleRoot size={20} borderBottom>
                                 搜尋字典檔
                             </TitleRoot>
@@ -96,13 +115,30 @@ function TranslationSearch() {
                                 />
                             </InputRoot>
                         </Col>
-                        <Col span={10}>
+                        <Col span={5}>
                             <TitleRoot size={20} borderBottom>
                                 篩選功能
                             </TitleRoot>
                             <Checkbox onChange={handleChangeConversion}>大小寫需相符</Checkbox>
                             <br />
                             <Checkbox onChange={handleChangeMatch}>內容需相符</Checkbox>
+                        </Col>
+                        <Col span={7}>
+                            <TitleRoot size={20} borderBottom>
+                                語系選擇
+                            </TitleRoot>
+                            <Row>
+                                <Col span={24}>
+                                    <Checkbox
+                                        indeterminate={indeterminate}
+                                        onChange={onCheckAllChange}
+                                        checked={checkAll}
+                                    >
+                                        全選
+                                    </Checkbox>
+                                </Col>
+                                <CheckboxGroupRoot options={TitleDataOptions} value={checkedList} onChange={onChange} />
+                            </Row>
                         </Col>
                         <Col span={4}>
                             <TitleRoot size={20} borderBottom>
@@ -118,6 +154,7 @@ function TranslationSearch() {
             <TranslationSearchBody>
                 {!!translationList &&
                     translationList.map((row, index) => {
+                        console.log('row', row);
                         return (
                             <React.Fragment key={index}>
                                 <Divider orientation="left">{row.data[1]}</Divider>
@@ -211,4 +248,11 @@ const TranslationSearchBody = styled.section`
     max-width: 1000px;
     margin: 0 auto;
     padding: 30px 0;
+`;
+
+const CheckboxGroupRoot = styled(CheckboxGroup)`
+    label {
+        width: 50%;
+        margin-right: 0;
+    }
 `;
