@@ -137,7 +137,17 @@ function TranslationSearch() {
                                         全選
                                     </Checkbox>
                                 </Col>
-                                <CheckboxGroupRoot options={TitleDataOptions} value={checkedList} onChange={onChange} />
+                                <CheckboxGroup onChange={onChange} value={checkedList}>
+                                    <Row>
+                                        {TitleDataOptions.map((row, index) => {
+                                            return (
+                                                <Col span={12} key={index}>
+                                                    <Checkbox value={row}>{row}</Checkbox>
+                                                </Col>
+                                            );
+                                        })}
+                                    </Row>
+                                </CheckboxGroup>
                             </Row>
                         </Col>
                         <Col span={4}>
@@ -154,7 +164,6 @@ function TranslationSearch() {
             <TranslationSearchBody>
                 {!!translationList &&
                     translationList.map((row, index) => {
-                        console.log('row', row);
                         return (
                             <React.Fragment key={index}>
                                 <Divider orientation="left">{row.data[1]}</Divider>
@@ -248,11 +257,4 @@ const TranslationSearchBody = styled.section`
     max-width: 1000px;
     margin: 0 auto;
     padding: 30px 0;
-`;
-
-const CheckboxGroupRoot = styled(CheckboxGroup)`
-    label {
-        width: 50%;
-        margin-right: 0;
-    }
 `;
