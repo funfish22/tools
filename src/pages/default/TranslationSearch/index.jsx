@@ -171,26 +171,26 @@ function TranslationSearch() {
                                     grid={{ gutter: 16, column: 3 }}
                                     dataSource={TitleData}
                                     renderItem={(item, index) => {
-                                        return (
-                                            checkedList.includes(item.title) && (
-                                                <List.Item>
-                                                    <Card
-                                                        title={item.title}
-                                                        extra={
-                                                            <Button
-                                                                type="primary"
-                                                                size="small"
-                                                                block
-                                                                onClick={() => handleCopyText(row.data[index + 1])}
-                                                            >
-                                                                複製
-                                                            </Button>
-                                                        }
-                                                    >
-                                                        {row.data[index + 1]}
-                                                    </Card>
-                                                </List.Item>
-                                            )
+                                        return checkedList.includes(item.title) ? (
+                                            <List.Item>
+                                                <Card
+                                                    title={item.title}
+                                                    extra={
+                                                        <Button
+                                                            type="primary"
+                                                            size="small"
+                                                            block
+                                                            onClick={() => handleCopyText(row.data[index + 1])}
+                                                        >
+                                                            複製
+                                                        </Button>
+                                                    }
+                                                >
+                                                    {row.data[index + 1]}
+                                                </Card>
+                                            </List.Item>
+                                        ) : (
+                                            <></>
                                         );
                                     }}
                                 />
