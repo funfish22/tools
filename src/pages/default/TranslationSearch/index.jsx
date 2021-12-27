@@ -12,15 +12,17 @@ import { translationSearchQuery } from '@apis/TranslationSearch';
 const CheckboxGroup = Checkbox.Group;
 
 const TitleData = [
-    '簡體中文 zh-CN',
-    '英文 en-US',
-    '越南文 vi-VN',
-    '韓文 ko-KR',
-    '泰文 th-TH',
-    '印尼文 in-ID',
-    '印地文 hi-IN',
-    '日文 ja-JP',
+    { title: '簡體中文 zh-CN' },
+    { title: '英文 en-US' },
+    { title: '越南文 vi-VN' },
+    { title: '韓文 ko-KR' },
+    { title: '泰文 th-TH' },
+    { title: '印尼文 in-ID' },
+    { title: '印地文 hi-IN' },
+    { title: '日文 ja-JP' },
 ];
+
+const TitleDataOptions = TitleData.map((row) => row.title);
 
 function TranslationSearch() {
     const history = useHistory();
@@ -33,7 +35,7 @@ function TranslationSearch() {
     const [loading, setLoading] = useState(false);
     const [indeterminate, setIndeterminate] = useState(true);
     const [checkAll, setCheckAll] = useState(false);
-    const [checkedList, setCheckedList] = useState(TitleData);
+    const [checkedList, setCheckedList] = useState(TitleDataOptions);
 
     const { setH1Title, loginStatus } = useContext(MyContext);
 
@@ -77,15 +79,15 @@ function TranslationSearch() {
     }
 
     function onCheckAllChange(e) {
-        setCheckedList(e.target.checked ? TitleData : []);
+        setCheckedList(e.target.checked ? TitleDataOptions : []);
         setIndeterminate(false);
         setCheckAll(e.target.checked);
     }
 
     function onChange(list) {
         setCheckedList(list);
-        setIndeterminate(!!list.length && list.length < TitleData.length);
-        setCheckAll(list.length === TitleData.length);
+        setIndeterminate(!!list.length && list.length < TitleDataOptions.length);
+        setCheckAll(list.length === TitleDataOptions.length);
     }
 
     return (
@@ -137,7 +139,7 @@ function TranslationSearch() {
                                 </Col>
                                 <CheckboxGroup onChange={onChange} value={checkedList}>
                                     <Row>
-                                        {TitleData.map((row, index) => {
+                                        {TitleDataOptions.map((row, index) => {
                                             return (
                                                 <Col span={12} key={index}>
                                                     <Checkbox value={row}>{row}</Checkbox>
@@ -165,30 +167,30 @@ function TranslationSearch() {
                         return (
                             <React.Fragment key={index}>
                                 <Divider orientation="left">{row.data[1]}</Divider>
-                                <List
+                                <ListRoot
                                     grid={{ gutter: 16, column: 3 }}
-                                    dataSource={checkedList}
+                                    dataSource={TitleData}
                                     renderItem={(item, index) => {
-                                        return checkedList.includes(item) ? (
-                                            <List.Item>
-                                                <Card
-                                                    title={item}
-                                                    extra={
-                                                        <Button
-                                                            type="primary"
-                                                            size="small"
-                                                            block
-                                                            onClick={() => handleCopyText(row.data[index + 1])}
-                                                        >
-                                                            複製
-                                                        </Button>
-                                                    }
-                                                >
-                                                    {row.data[index + 1]}
-                                                </Card>
-                                            </List.Item>
-                                        ) : (
-                                            <></>
+                                        return (
+                                            checkedList.includes(item.title) && (
+                                                <List.Item>
+                                                    <Card
+                                                        title={item.title}
+                                                        extra={
+                                                            <Button
+                                                                type="primary"
+                                                                size="small"
+                                                                block
+                                                                onClick={() => handleCopyText(row.data[index + 1])}
+                                                            >
+                                                                複製
+                                                            </Button>
+                                                        }
+                                                    >
+                                                        {row.data[index + 1]}
+                                                    </Card>
+                                                </List.Item>
+                                            )
                                         );
                                     }}
                                 />
@@ -257,4 +259,10 @@ const TranslationSearchBody = styled.section`
     max-width: 1000px;
     margin: 0 auto;
     padding: 30px 0;
+`;
+
+const ListRoot = styled(List)`
+    .ant-row > div:empty {
+        width: 0px !important;
+    }
 `;
