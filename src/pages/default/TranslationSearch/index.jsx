@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, memo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MyContext } from '@reducers';
 
-import { Form, Row, Col, Button, Input, List, Card, Divider, Alert, Spin, Checkbox } from 'antd';
+import { Form, Row, Col, Button, Input, List, Card, Divider, Alert, Spin, Checkbox, Radio } from 'antd';
 import styled from 'styled-components';
 
 import Title from '@component/atoms/Title';
@@ -36,13 +36,18 @@ function TranslationSearch() {
     const [indeterminate, setIndeterminate] = useState(true);
     const [checkAll, setCheckAll] = useState(false);
     const [checkedList, setCheckedList] = useState(TitleDataOptions);
+    const [listStyle, setListStyle] = useState(1);
 
     const { setH1Title, loginStatus } = useContext(MyContext);
 
     useEffect(() => {
         setH1Title('翻譯搜尋');
         if (!loginStatus) history.push('/');
-    });
+
+        if (!!sessionStorage.listStyle === true) {
+            sessionStorage.listStyle === '1' ? setListStyle(1) : setListStyle(0);
+        }
+    }, [setH1Title, loginStatus, history]);
 
     function handleTranslationText(e) {
         setTranslationText(e.target.value);
@@ -52,7 +57,6 @@ function TranslationSearch() {
         setLoading(true);
         setTranslationList([]);
         const translationSearchArray = await translationSearchQuery(translationText, conversion, match);
-        console.log('match', match);
         if (translationSearchArray.status === 200) {
             setLoading(false);
             setTranslationList(translationSearchArray.data);
@@ -90,6 +94,11 @@ function TranslationSearch() {
         setCheckAll(list.length === TitleDataOptions.length);
     }
 
+    function onChangeListStyle(e) {
+        setListStyle(e.target.value);
+        sessionStorage.setItem('listStyle', e.target.value);
+    }
+
     return (
         <TranslationSearchRoot>
             {loading && (
@@ -101,7 +110,7 @@ function TranslationSearch() {
             <TranslationSearchHeader>
                 <Form>
                     <Row gutter={32}>
-                        <Col span={8}>
+                        <Col span={7}>
                             <TitleRoot size={20} borderBottom>
                                 搜尋字典檔
                             </TitleRoot>
@@ -115,13 +124,18 @@ function TranslationSearch() {
                                 />
                             </InputRoot>
                         </Col>
-                        <Col span={5}>
+                        <Col span={6}>
                             <TitleRoot size={20} borderBottom>
                                 篩選功能
                             </TitleRoot>
                             <Checkbox onChange={handleChangeConversion}>大小寫需相符</Checkbox>
                             <br />
                             <Checkbox onChange={handleChangeMatch}>內容需相符</Checkbox>
+                            <br />
+                            <Radio.Group onChange={onChangeListStyle} value={listStyle}>
+                                <Radio value={1}>卡片模式</Radio>
+                                <Radio value={0}>列表模式</Radio>
+                            </Radio.Group>
                         </Col>
                         <Col span={7}>
                             <TitleRoot size={20} borderBottom>
@@ -168,14 +182,14 @@ function TranslationSearch() {
                             <React.Fragment key={index}>
                                 <Divider orientation="left">{row.data[1]}</Divider>
                                 <ListRoot
-                                    grid={{ gutter: 16, column: 3 }}
+                                    grid={listStyle && { gutter: 16, column: 3 }}
                                     dataSource={TitleData}
+                                    size={!listStyle && 'small'}
                                     renderItem={(item, index) => {
                                         return checkedList.includes(item.title) ? (
-                                            <List.Item>
-                                                <Card
-                                                    title={item.title}
-                                                    extra={
+                                            <List.Item
+                                                actions={
+                                                    !listStyle && [
                                                         <Button
                                                             type="primary"
                                                             size="small"
@@ -183,11 +197,32 @@ function TranslationSearch() {
                                                             onClick={() => handleCopyText(row.data[index + 1])}
                                                         >
                                                             複製
-                                                        </Button>
-                                                    }
-                                                >
-                                                    {row.data[index + 1]}
-                                                </Card>
+                                                        </Button>,
+                                                    ]
+                                                }
+                                            >
+                                                {listStyle ? (
+                                                    <Card
+                                                        title={item.title}
+                                                        extra={
+                                                            <Button
+                                                                type="primary"
+                                                                size="small"
+                                                                block
+                                                                onClick={() => handleCopyText(row.data[index + 1])}
+                                                            >
+                                                                複製
+                                                            </Button>
+                                                        }
+                                                    >
+                                                        {row.data[index + 1]}
+                                                    </Card>
+                                                ) : (
+                                                    <List.Item.Meta
+                                                        title={item.title}
+                                                        description={row.data[index + 1]}
+                                                    />
+                                                )}
                                             </List.Item>
                                         ) : (
                                             <></>
@@ -264,5 +299,8 @@ const TranslationSearchBody = styled.section`
 const ListRoot = styled(List)`
     .ant-row > div:empty {
         width: 0px !important;
+    }
+    li.ant-list-item {
+        background-color: #fff;
     }
 `;
