@@ -13,7 +13,7 @@ import { saveAs } from 'file-saver';
 import Title from '@component/atoms/Title';
 import IconCard from '@component/molecules/IconCard';
 
-const imgSize = [192, 180, 144, 128, 120, 96];
+const imgSize = [192, 192, 180, 144, 128, 120, 96];
 
 function ResizeIcon() {
     const [imageUrl, setImageUrl] = useState('');
