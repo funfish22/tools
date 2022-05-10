@@ -13,18 +13,30 @@ function IconCard(props) {
                 } else {
                     return `app_icon_${webId}_c.png`;
                 }
-            } else if (version === 2) {
+            }
+            if (version === 2) {
                 if (id !== 1) {
                     return `app_icon_effects_${size[0]}x${size[0]}.png`;
                 } else {
                     return `app_icon_effects_${webId}_c.png`;
                 }
             }
+            if (version === 3) {
+                if (id !== 1) {
+                    return `app_icon_sport_${size[0]}x${size[0]}.png`;
+                } else {
+                    return `app_icon_sport_${webId}_c.png`;
+                }
+            }
         } else {
             if (version === 1) {
                 return `app_icon_${webId}.png`;
-            } else if (version === 2) {
+            }
+            if (version === 2) {
                 return `app_icon_effects_${webId}.png`;
+            }
+            if (version === 3) {
+                return `app_icon_sport_${webId}.png`;
             }
         }
         if (size === 150) {
